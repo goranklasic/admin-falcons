@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Parents – Directory</title>
+  <style>
+    @page {
+      margin: 15px;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0px;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    .container {
+      padding: 20px;
+    }
+    .header img {
+      width: 60%;       /* 🔧 Adjust image width here */
+      height: auto;
+      max-height: 30%;  /* 🔧 Optional max vertical space */
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    h2, h4 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  {% for item in parent_data %}
+  <div class="container {% if not forloop.first %}page-break{% endif %}">
+    <div class="header" style="text-align: center;">
+      <img src="{% static 'mfheader.png' %}" alt="Header Logo">
+      <h2>{{ item.parent.parents_name }} – Profile Summary</h2>
+    </div>
+
+    <table>
+      <tbody>
+        <tr><th>Date of Birth</th><td>{{ item.parent.parents_dob }}</td></tr>
+        <tr><th>Email</th><td>{{ item.parent.parents_email }}</td></tr>
+        <tr><th>Phone Number</th><td>{{ item.parent.parents_mobile_number }}</td></tr>
+        <tr><th>Member 1</th><td>{{ item.parent.member_1 }}</td></tr>
+        <tr><th>Description 1</th><td>{{ item.parent.parents_member_1_description }}</td></tr>
+        <tr><th>Member 2</th><td>{{ item.parent.member_2 }}</td></tr>
+        <tr><th>Description 2</th><td>{{ item.parent.parents_member_2_description }}</td></tr>
+        <tr><th>Member 3</th><td>{{ item.parent.member_3 }}</td></tr>
+        <tr><th>Description 3</th><td>{{ item.parent.parents_member_3_description }}</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Linked Players</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Player Name</th>
+          <th>Team</th>
+          <th>BI Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for player in item.players %}
+        <tr>
+          <td>{{ player.player_name }}</td>
+          <td>{{ player.player_team }}</td>
+          <td>{{ player.player_bi_number }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No linked players found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+
+</body>
+</html>

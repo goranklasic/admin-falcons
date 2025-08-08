@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>All Players</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>All Active Players</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Team</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr>
+                <td>{{ player.player_name }}</td>
+                <td>{{ player.player_dob|date:"d/m/Y" }}</td>
+                <td>{{ player.player_address }}</td>
+                <td>{{ player.player_email }}</td>
+                <td>{{ player.player_primary_mobile_number }}</td>
+                <td>{{ player.player_team }}</td>
+                <td>{{ player.player_role }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

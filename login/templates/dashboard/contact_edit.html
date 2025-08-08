@@ -1,0 +1,68 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-center">✏️ Edit Contact</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+
+            <!-- Player Name -->
+            <div class="col-md-6">
+                <label for="playername" class="form-label">Player Name</label>
+                <input type="text" name="playername" class="form-control" id="playername"
+                       value="{{ contact.playername }}" required>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="col-md-6">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" name="dob" class="form-control" id="dob"
+                       value="{{ contact.dob|date:'Y-m-d' }}" required>
+            </div>
+
+            <!-- Team -->
+            <div class="col-md-6">
+                <label for="teams_name" class="form-label">Team</label>
+                <select name="teams_name" class="form-select" id="teams_name" required>
+                    <option value="">-- Select Team --</option>
+                    {% for team in teams %}
+                        {% if team.teams_name == contact.teams_name %}
+                            <option value="{{ team.teams_name }}" selected>{{ team.teams_name }}</option>
+                        {% else %}
+                            <option value="{{ team.teams_name }}">{{ team.teams_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+                <label for="contactemail" class="form-label">Email</label>
+                <input type="email" name="contactemail" class="form-control" id="contactemail"
+                       value="{{ contact.contactemail }}" required>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-md-6">
+                <label for="phonenumber" class="form-label">Phone</label>
+                <input type="text" name="phonenumber" class="form-control" id="phonenumber"
+                       value="{{ contact.phonenumber }}" required>
+            </div>
+
+            <!-- Memo -->
+            <div class="col-md-12">
+                <label for="memo" class="form-label">Memo</label>
+                <textarea name="memo" class="form-control" id="memo" rows="3">{{ contact.memo }}</textarea>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-success">💾 Save Contact</button>
+            <a href="{% url 'contact_list_view' %}" class="btn btn-secondary ms-2">↩ Back to List</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

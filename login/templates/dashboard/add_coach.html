@@ -1,0 +1,147 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h3>Add Coach</h3>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <!-- 👤 Coach Info -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Information</div>
+    <div class="card-body">
+      <table class="table table-borderless">
+        <tr>
+          <td>{{ form.coaches_name.label_tag }}</td><td>{{ form.coaches_name }}</td>
+          <td>{{ form.coaches_dob.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.coaches_dob }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_coaches_dob')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.coaches_address.label_tag }}</td><td>{{ form.coaches_address }}</td>
+          <td>{{ form.garda_vetting.label_tag }}</td><td>{{ form.garda_vetting }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.coaches_email.label_tag }}</td><td>{{ form.coaches_email }}</td>
+          <td>{{ form.garda_vetting_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.garda_vetting_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_garda_vetting_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.coach_bi_number.label_tag }}</td><td>{{ form.coach_bi_number }}</td>
+          <td>{{ form.first_aid.label_tag }}</td><td>{{ form.first_aid }}</td>
+        </tr>
+        <tr>
+          <td></td><td></td>
+          <td>{{ form.first_aid_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.first_aid_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_first_aid_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 📋 Certification Summary -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Certification Summary</div>
+    <div class="card-body">
+      <table class="table table-borderless">
+        <tr>
+          <td>{{ form.safe_guarding_level_1.label_tag }}</td><td>{{ form.safe_guarding_level_1 }}</td>
+          <td>{{ form.basketball_coaching_level_0.label_tag }}</td><td>{{ form.basketball_coaching_level_0 }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.safe_guarding_level_1_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.safe_guarding_level_1_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_1_date')">❌</button>
+            </div>
+          </td>
+          <td>{{ form.basketball_coaching_level_0_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.basketball_coaching_level_0_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_0_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.safe_guarding_level_2.label_tag }}</td><td>{{ form.safe_guarding_level_2 }}</td>
+          <td>{{ form.basketball_coaching_level_1.label_tag }}</td><td>{{ form.basketball_coaching_level_1 }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.safe_guarding_level_2_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.safe_guarding_level_2_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_2_date')">❌</button>
+            </div>
+          </td>
+          <td>{{ form.basketball_coaching_level_1_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.basketball_coaching_level_1_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_1_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.safe_guarding_level_3.label_tag }}</td><td>{{ form.safe_guarding_level_3 }}</td>
+          <td>{{ form.basketball_coaching_level_2.label_tag }}</td><td>{{ form.basketball_coaching_level_2 }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.safe_guarding_level_3_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.safe_guarding_level_3_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_3_date')">❌</button>
+            </div>
+          </td>
+          <td>{{ form.basketball_coaching_level_2_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.basketball_coaching_level_2_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_2_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ Buttons -->
+  <div class="mt-4 mb-5 text-end">
+    <button type="submit" class="btn btn-success">Add Coach</button>
+    <a href="{% url 'coach_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+  </div>
+</form>
+
+<script>
+  function clearDate(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) field.value = "";
+  }
+</script>
+{% endblock %}

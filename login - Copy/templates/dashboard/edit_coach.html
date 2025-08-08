@@ -1,0 +1,231 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h3>Edit Coach</h3>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <!-- 👤 Coach Info -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Information</div>
+    <div class="card-body">
+      <table class="table table-borderless">
+        <tr>
+          <td>{{ form.coaches_name.label_tag }}</td><td>{{ form.coaches_name }}</td>
+          <td>{{ form.coaches_dob.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.coaches_dob }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_coaches_dob')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.coaches_address.label_tag }}</td><td>{{ form.coaches_address }}</td>
+          <td>{{ form.garda_vetting.label_tag }}</td><td>{{ form.garda_vetting }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.coaches_email.label_tag }}</td><td>{{ form.coaches_email }}</td>
+          <td>{{ form.garda_vetting_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.garda_vetting_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_garda_vetting_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="id_active_status">Active Status</label></td>
+          <td>
+            <select name="active_status" id="id_active_status" class="form-select">
+              <option value="1" {% if coach.active_status == 1 %}selected{% endif %}>YES</option>
+              <option value="0" {% if coach.active_status == 0 %}selected{% endif %}>NO</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ form.coach_bi_number.label_tag }}</td><td>{{ form.coach_bi_number }}</td>
+          <td>{{ form.first_aid.label_tag }}</td><td>{{ form.first_aid }}</td>
+        </tr>
+        <tr>
+          <td></td><td></td>
+          <td>{{ form.first_aid_date.label_tag }}</td>
+          <td>
+            <div class="input-group">
+              {{ form.first_aid_date }}
+              <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_first_aid_date')">❌</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 🖼️ Coach Photo Preview + Upload -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Photo</div>
+    <div class="card-body text-center">
+      {% if coach.photo_link %}
+        <img src="{{ coach.photo_link }}" alt="Coach Photo" class="img-thumbnail mb-3" style="max-height: 200px;">
+      {% else %}
+        <p class="text-muted">No photo uploaded yet.</p>
+      {% endif %}
+      <div class="mb-3">
+        {{ form.coach_photo.label_tag }} {{ form.coach_photo }}
+      </div>
+    </div>
+  </div>
+
+  <!-- 📂 Existing Coach Certificates -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Certifications</div>
+    <div class="card-body">
+      {% if certificates %}
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Issued</th>
+              <th>Valid Until</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cert in certificates %}
+            <tr>
+              <td>{{ cert.cert_type }}</td>
+              <td>{{ cert.date_issued|date:"Y-m-d" }}</td>
+              <td>{{ cert.valid_until|date:"Y-m-d" }}</td>
+              <td>{{ cert.notes }}</td>
+              <td>
+                {% if cert.file_path %}
+                  <a href="{{ cert.file_path }}" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                {% endif %}
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="submitDelete('{{ cert.pk }}')">Delete</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted">No certificates attached to this coach yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 🧾 Certification Summary -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Certification Summary</div>
+    <div class="card-body">
+      <table class="table table-borderless">
+        <tr><td>{{ form.safe_guarding_level_1.label_tag }}</td><td>{{ form.safe_guarding_level_1 }}</td>
+            <td>{{ form.basketball_coaching_level_0.label_tag }}</td><td>{{ form.basketball_coaching_level_0 }}</td></tr>
+
+        <tr><td>{{ form.safe_guarding_level_1_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.safe_guarding_level_1_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_1_date')">❌</button></div></td>
+            <td>{{ form.basketball_coaching_level_0_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.basketball_coaching_level_0_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_0_date')">❌</button></div></td></tr>
+
+        <tr><td>{{ form.safe_guarding_level_2.label_tag }}</td><td>{{ form.safe_guarding_level_2 }}</td>
+            <td>{{ form.basketball_coaching_level_1.label_tag }}</td><td>{{ form.basketball_coaching_level_1 }}</td></tr>
+
+        <tr><td>{{ form.safe_guarding_level_2_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.safe_guarding_level_2_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_2_date')">❌</button></div></td>
+            <td>{{ form.basketball_coaching_level_1_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.basketball_coaching_level_1_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_1_date')">❌</button></div></td></tr>
+
+        <tr><td>{{ form.safe_guarding_level_3.label_tag }}</td><td>{{ form.safe_guarding_level_3 }}</td>
+            <td>{{ form.basketball_coaching_level_2.label_tag }}</td><td>{{ form.basketball_coaching_level_2 }}</td></tr>
+
+        <tr><td>{{ form.safe_guarding_level_3_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.safe_guarding_level_3_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_3_date')">❌</button></div></td>
+            <td>{{ form.basketball_coaching_level_2_date.label_tag }}</td>
+            <td><div class="input-group">{{ form.basketball_coaching_level_2_date }}<button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_2_date')">❌</button></div></td></tr>
+      </table>
+    </div>
+  </div>
+  <!-- ✅ Save Coach + Cancel Buttons (inside main form) -->
+  <div class="mt-4 mb-5 text-end">
+    <button type="submit" class="btn btn-success">Save Coach</button>
+    <a href="{% url 'coach_list' %}" class="btn btn-secondary ms-2">Close</a>
+  </div>
+</form> <!-- ✅ closes main coach form -->
+
+<!-- 📥 Upload Certificate (separate form) -->
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="hidden" name="cert_upload" value="1">
+
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Upload New Certificate</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">{{ certificate_form.cert_type.label_tag }}{{ certificate_form.cert_type }}</div>
+        <div class="col-md-4">{{ certificate_form.date_issued.label_tag }}{{ certificate_form.date_issued }}</div>
+        <div class="col-md-4">{{ certificate_form.valid_until.label_tag }}{{ certificate_form.valid_until }}</div>
+        <div class="col-md-12">{{ certificate_form.notes.label_tag }}{{ certificate_form.notes }}</div>
+        <div class="col-md-12">{{ certificate_form.file_path.label_tag }}{{ certificate_form.file_path }}</div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3" onclick="return validateCertificateDates()">Upload Certificate</button>
+    </div>
+  </div>
+</form>
+
+<!-- ⚙️ Script helpers -->
+<script>
+  function clearDate(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) field.value = "";
+  }
+
+  function validateCertificateDates() {
+    const issued = document.getElementById('id_date_issued');
+    const valid = document.getElementById('id_valid_until');
+    if (!issued || !valid) return true;
+
+    const dateIssued = new Date(issued.value);
+    const validUntil = new Date(valid.value);
+
+    if (dateIssued && validUntil && dateIssued > validUntil) {
+      const alertBox = document.createElement('div');
+      alertBox.className = 'alert alert-warning alert-dismissible fade show mt-3';
+      alertBox.role = 'alert';
+      alertBox.innerHTML = `
+        <strong>Warning:</strong> "Date Issued" cannot be later than "Valid Until".
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      document.querySelector('.card-body').prepend(alertBox);
+      return false;
+    }
+    return true;
+  }
+
+  function submitDelete(certId) {
+    if (confirm("Delete this certificate permanently?")) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/admin-falcons/certificates/delete/' + certId + '/';
+
+      const csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = 'csrfmiddlewaretoken';
+      csrf.value = '{{ csrf_token }}';
+
+      form.appendChild(csrf);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+</script>
+{% endblock %}

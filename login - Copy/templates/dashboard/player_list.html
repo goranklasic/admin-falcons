@@ -1,0 +1,76 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Player List</h2>
+    <form method="get" class="form-inline mb-3">
+  <input type="text" name="name" value="{{ name_filter }}" placeholder="Filter by Name" class="form-control mr-2">
+  <input type="text" name="team" value="{{ team_filter }}" placeholder="Filter by Team" class="form-control mr-2">
+
+  {% if request.GET.all == '1' %}
+    <input type="hidden" name="all" value="1">
+  {% endif %}
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <a href="{% url 'print_all_players' %}?name={{ name_filter }}&team={{ team_filter }}{% if request.GET.all == '1' %}&all=1{% endif %}" target="_blank" class="btn btn-secondary ml-2">Print All Players</a>
+</form>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Player Name</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>BI Number</th>
+                <th>Team</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr>
+                <td>{{ player.player_name }}</td>
+                <td>{{ player.player_dob|date:"d/m/Y" }}</td>
+                <td>{{ player.player_address }}</td>
+                <td>{{ player.player_email }}</td>
+                <td>{{ player.player_primary_mobile_number }}</td>
+                <td>{{ player.player_bi_number }}</td>
+                <td>{{ player.player_team }}</td>
+                <td>
+                    {% if player.player_active == 1 %}
+                        <span class="badge rounded-pill bg-success">Active</span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'edit_player' player.player_id %}" class="btn btn-sm btn-warning">Modify</a>
+                    <a href="{% url 'print_player' player.player_id %}" target="_blank" class="btn btn-sm btn-info">Print</a>
+                    {% if player.player_id %}
+  <a href="{% url 'generate_player_form' player.player_id %}" target="_blank" class="btn btn-outline-success btn-sm">
+     <i class="bi bi-file-earmark-pdf"></i> Form
+  </a>
+{% else %}
+  <span class="text-muted">No Form</span>
+{% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No players found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            {% if players.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ players.previous_page_number }}&name={{ name_filter }}&team={{ team_filter }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ players.number }}</span></li>
+            {% if players.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ players.next_page_number }}&name={{ name_filter }}&team={{ team_filter }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

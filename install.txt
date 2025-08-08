@@ -1,0 +1,3 @@
+python -m venv C:\Users\goranklasic\PythonProjects\admin-falcons
+
+pip install python-docx docx2pdf PyPDF2 psycopg2-binary certify django django-bootstrap4
