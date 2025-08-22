@@ -1,0 +1,3397 @@
+#SQL tables
+#table club_link
+CREATE TABLE IF NOT EXISTS club_link
+(
+    id integer NOT NULL,
+    player_id integer NOT NULL,
+    clubs_id integer NOT NULL
+)
+
+# table coach_certificates
+CREATE TABLE IF NOT EXISTS coach_certificates ( certificate_id integer NOT NULL DEFAULT nextval('coach_certificates_certificate_id_seq'::regclass), coach_id integer NOT NULL, cert_type character varying(100) COLLATE pg_catalog."default" NOT NULL, file_path text COLLATE pg_catalog."default" NOT NULL, date_issued date NOT NULL, valid_until date NOT NULL, notes text COLLATE pg_catalog."default", CONSTRAINT coach_certificates_pkey PRIMARY KEY (certificate_id), CONSTRAINT fk_coach FOREIGN KEY (coach_id) REFERENCES public.coaches (coaches_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE )
+
+#table coaches
+CREATE TABLE IF NOT EXISTS coaches ( coaches_id integer NOT NULL, coaches_name character(50) COLLATE pg_catalog."default", coaches_address character(100) COLLATE pg_catalog."default", coaches_dob timestamp without time zone, coaches_email character(50) COLLATE pg_catalog."default", coach_bi_number integer, username character(20) COLLATE pg_catalog."default", password character(20) COLLATE pg_catalog."default", permission_id integer, safe_guarding_level_1 smallint DEFAULT 0, safe_guarding_level_1_date timestamp without time zone, safe_guarding_level_2 smallint DEFAULT 0, safe_guarding_level_2_date timestamp without time zone, safe_guarding_level_3 smallint DEFAULT 0, safe_guarding_level_3_date timestamp without time zone, garda_vetting smallint DEFAULT 0, garda_vetting_date timestamp without time zone, basketball_coaching_level_0 smallint DEFAULT 0, basketball_coaching_level_0_date timestamp without time zone, basketball_coaching_level_1 smallint DEFAULT 0, basketball_coaching_level_1_date timestamp without time zone, basketball_coaching_level_2 smallint DEFAULT 0, basketball_coaching_level_2_date timestamp without time zone, first_aid smallint, first_aid_date timestamp without time zone, active_status smallint DEFAULT 0, photo_link character(200) COLLATE pg_catalog."default", CONSTRAINT coa_primary_coaches PRIMARY KEY (coaches_id) )
+
+# table contactlist
+CREATE TABLE IF NOT EXISTS contactlist ( id integer NOT NULL DEFAULT nextval('contactlist_id_seq'::regclass), playername character(100) COLLATE pg_catalog."default" NOT NULL, dob date NOT NULL, teams_name character(100) COLLATE pg_catalog."default" NOT NULL, contactemail character(100) COLLATE pg_catalog."default" NOT NULL, phonenumber character(20) COLLATE pg_catalog."default" NOT NULL, memo character varying(255) COLLATE pg_catalog."default", CONSTRAINT contactlist_pkey PRIMARY KEY (id) )
+
+# table gender
+CREATE TABLE IF NOT EXISTS gender ( gender_id integer NOT NULL, gender_name character(50) COLLATE pg_catalog."default" NOT NULL )
+
+# table log
+CREATE TABLE IF NOT EXISTS log ( id integer NOT NULL, coach_id integer NOT NULL, coach_permission integer NOT NULL, dof timestamp without time zone, log_def character(200) COLLATE pg_catalog."default", CONSTRAINT logg_primary PRIMARY KEY (id) )
+
+# table login
+CREATE TABLE IF NOT EXISTS login
+(
+    login_key integer NOT NULL DEFAULT nextval('login_login_key_seq'::regclass),
+    id integer NOT NULL,
+    username character(50) COLLATE pg_catalog."default" NOT NULL,
+    password character(50) COLLATE pg_catalog."default" NOT NULL,
+    coaches_id integer,
+    coaches_name character(100) COLLATE pg_catalog."default",
+    permission_id smallint DEFAULT 0,
+    CONSTRAINT login_pkey PRIMARY KEY (login_key)
+)
+
+# table parents
+CREATE TABLE IF NOT EXISTS parents ( parents_id integer NOT NULL, parents_name character(50) COLLATE pg_catalog."default" NOT NULL, parents_dob timestamp without time zone, parents_address character(100) COLLATE pg_catalog."default", parents_email character(50) COLLATE pg_catalog."default", parents_mobile_number character(20) COLLATE pg_catalog."default" NOT NULL, parents_committee_member smallint DEFAULT 0, parents_member_1 integer DEFAULT 0, member_1 character(50) COLLATE pg_catalog."default", parents_member_1_description character(50) COLLATE pg_catalog."default", parents_member_2 integer DEFAULT 0, member_2 character(50) COLLATE pg_catalog."default", parents_member_2_description character(50) COLLATE pg_catalog."default", parents_member_3 integer DEFAULT 0, member_3 character(50) COLLATE pg_catalog."default", parents_member_3_description character(50) COLLATE pg_catalog."default" )
+
+# table other_sports
+CREATE TABLE IF NOT EXISTS other_sports ( sports_id integer NOT NULL, sports_name character(20) COLLATE pg_catalog."default" NOT NULL, sports_description character(100) COLLATE pg_catalog."default" )
+
+# table other_clubs
+CREATE TABLE IF NOT EXISTS public.other_clubs ( clubs_id integer NOT NULL, clubs_name character(20) COLLATE pg_catalog."default" NOT NULL, clubs_description character(100) COLLATE pg_catalog."default" )
+
+# table parents_link
+CREATE TABLE IF NOT EXISTS public.parents_link
+(
+    id integer NOT NULL,
+    player_id integer NOT NULL,
+    parents_id integer NOT NULL
+)
+
+# table payments
+CREATE TABLE IF NOT EXISTS payments
+(
+    payments_id integer NOT NULL,
+    player_id integer NOT NULL,
+    payments_date timestamp without time zone,
+    payments_description character(100) COLLATE pg_catalog."default",
+    payments_type integer NOT NULL,
+    payments_amount numeric(15,2),
+    web smallint,
+    discount numeric,
+    archive_year integer DEFAULT 0,
+    archive smallint DEFAULT 0
+)
+
+# table player
+CREATE TABLE IF NOT EXISTS player
+(
+    player_id integer NOT NULL,
+    player_name character(50) COLLATE pg_catalog."default" NOT NULL,
+    player_bi_number integer,
+    player_team character(20) COLLATE pg_catalog."default",
+    player_team_id integer,
+    player_role character(50) COLLATE pg_catalog."default",
+    player_role_id integer,
+    player_other_roles character(50) COLLATE pg_catalog."default",
+    player_address character(100) COLLATE pg_catalog."default",
+    player_dob timestamp without time zone,
+    player_email character(50) COLLATE pg_catalog."default" NOT NULL,
+    player_primary_mobile_number character(20) COLLATE pg_catalog."default" NOT NULL,
+    player_contact_name1 character(50) COLLATE pg_catalog."default",
+    player_secundary_mobile_number character(20) COLLATE pg_catalog."default",
+    player_contact_name2 character(50) COLLATE pg_catalog."default",
+    gender_id integer,
+    gender_specify character(50) COLLATE pg_catalog."default",
+    player_medical_conditions character(50) COLLATE pg_catalog."default",
+    participation_member_training smallint,
+    participation_member_play_matches smallint,
+    participation_member_other_activities character(50) COLLATE pg_catalog."default",
+    photo_link character(200) COLLATE pg_catalog."default",
+    player_membership_amount numeric(15,2),
+    player_active smallint DEFAULT 0,
+    player_transfer_out smallint DEFAULT 0,
+    player_jersey integer,
+    sent_membership smallint DEFAULT 0,
+    created timestamp without time zone,
+    player_committee_member smallint DEFAULT 0,
+    player_member_1 integer,
+    player_member_2 integer,
+    player_member_3 integer,
+    photo_cons smallint DEFAULT 0
+)
+
+# table pml
+CREATE TABLE IF NOT EXISTS pml ( pml_id integer NOT NULL, pml_name character(50) COLLATE pg_catalog."default" NOT NULL )
+
+# table pt
+CREATE TABLE IF NOT EXISTS pt ( payments_type_id integer NOT NULL, payments_type_name character(50) COLLATE pg_catalog."default" NOT NULL, icon_no smallint )
+
+# table role
+CREATE TABLE IF NOT EXISTS role ( role_id integer NOT NULL, role_name character(50) COLLATE pg_catalog."default" NOT NULL )
+
+# table sports_link
+CREATE TABLE IF NOT EXISTS sports_link
+(
+    id integer NOT NULL,
+    player_id integer NOT NULL,
+    sports_id integer NOT NULL
+)
+
+# table teams
+CREATE TABLE IF NOT EXISTS teams ( teams_id integer NOT NULL, teams_name character(20) COLLATE pg_catalog."default" NOT NULL, teams_description character(50) COLLATE pg_catalog."default", teams_membership numeric(15,2), coaches_name1 character(50) COLLATE pg_catalog."default" NOT NULL, coaches_id1 integer NOT NULL, coaches_name2 character(50) COLLATE pg_catalog."default" NOT NULL, coaches_id2 integer NOT NULL, CONSTRAINT primary_id PRIMARY KEY (teams_id), CONSTRAINT fk_assistant_coach FOREIGN KEY (coaches_id2) REFERENCES public.coaches (coaches_id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT, CONSTRAINT fk_main_coach FOREIGN KEY (coaches_id1) REFERENCES public.coaches (coaches_id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT )
+
+#Relationships between tables
+Coaches.coach_id -> teams.coaches_id1
+Coaches.coach_id -> teams.coaches_id2
+Coaches can have more Teams members.
+Coaches.premission_id -> permissions.id
+Coaches can have 1 permissions.
+Parents.parents_member_1 -> pml.id
+Parents.member_1-> pml.pml_name
+Parents.parents_member_2 -> pml.id
+Parents.member_2 -> pml.pml_name
+Parents.parents_member_3 -> pml.id
+Parents.member_3 -> pml.pml_name
+
+#player relationships
+Player.player_team_id -> teams.teams_id
+Player.player_team -> teams.teams_name
+Player.player_role_id -> role.role_id
+Player.player_role -> role.role_name
+Player.gender_id -> gender.gender_id
+
+
+#pt relaionshis
+payments.payments_type -> pt.payments_type_id
+payments.player_id -> Player.player_id
+#Payments can have more players and more pt
+
+# parents_link
+Parents_link.player_id -> player.player_id
+Parents_link.parents_id -> parents.parents_id
+Player can have more parents
+
+# club_link
+Club_link.player_id -> player.player_id
+Club_link.clubs_id -> other_clubs.clubs_id
+Player can have more clubs
+
+# sports_link
+Sports_link.player_id -> player.player_id
+sports_link.sports_id -> other_sports.sports_id
+player can have more sports
+
+#working directory: C:\admin-falcons
+#settings.py, urls.py, wsgi.py directiory: C:\admin-falcons\admin_falcons
+#settings.py
+-- coding: utf-8 --
+""" Created on Tue Jul 22 11:16:38 2025
+@author: goranklasic """
+admin_falcons/settings.py
+import os from pathlib import Path
+BASE_DIR = Path(file).resolve().parent.parent
+SECRET_KEY = 'your-secret-key' # You can generate securely later
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760 # 10MB FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760 # 10MB
+DEBUG = True
+CSRF_TRUSTED_ORIGINS = [ 'https://mf-mbc.westeurope.cloudapp.azure.com', ]
+ALLOWED_HOSTS = ['*']
+INSTALLED_APPS = [ 'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'login', # 👈 Your custom app 'bootstrap4', # 👈 Bootstrap integration ]
+MIDDLEWARE = [ 'django.middleware.security.SecurityMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware', ]
+ROOT_URLCONF = 'admin_falcons.urls'
+TEMPLATES = [ { 'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'login', 'templates')], 'APP_DIRS': True, 'OPTIONS': { 'context_processors': [ 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+WSGI_APPLICATION = 'admin_falcons.wsgi.application'
+✅ PostgreSQL database
+DATABASES = { 'default': { 'ENGINE': 'django.db.backends.postgresql', 'NAME': 'mfbc', 'USER': 'web', 'PASSWORD': 'Midleton2025@', 'HOST': '127.0.0.1', 'PORT': '2024', 'OPTIONS': { 'sslmode': 'require', } } }
+STATIC_URL = '/static/' STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'login', 'static') # app-specific files ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/' MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#urls.py
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 22 11:18:42 2025
+
+@author: goranklasic
+"""
+
+from django.contrib import admin
+from django.urls import path
+from login import views
+from django.conf import settings
+from django.conf.urls.static import static
+import os
+from pathlib import Path
+from login import views
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+urlpatterns = [
+    # 🧠 System & session routes
+    path('admin/', admin.site.urls),
+    path('admin-falcons/', views.login_view, name='login'),
+    path('admin-falcons/dashboard/', views.dashboard_view, name='dashboard'),
+    path('admin-falcons/logout/', views.logout_view, name='logout'),
+
+    # 📇 Contacts
+    path('admin-falcons/contacts/', views.contact_list_view, name='contact_list_view'),
+    path('admin-falcons/contacts/edit/<int:pk>/', views.contact_edit_view, name='contact_edit_view'),
+    path('admin-falcons/contacts/print/', views.contact_print_view, name='contact_print_view'),
+    path('admin-falcons/contacts/print/<int:pk>/', views.print_single_contact_view, name='print_single_contact_view'),
+
+    # 🧑 ? ?  Coaches
+    path('admin-falcons/coaches/', views.coach_list_view, name='coach_list'),
+    path('admin-falcons/coaches/edit/<int:pk>/', views.edit_coach_view, name='coach_edit'),
+    path('admin-falcons/coaches/print/', views.print_coaches_view, name='coach_print'),
+    path('admin-falcons/coaches/print/<int:pk>/', views.print_single_coach_view, name='print_single_coach_view'),
+    path('admin-falcons/coaches/add/', views.add_coach_view, name='add_coach'),
+
+    # 🗑 ? Certificates
+    path('admin-falcons/certificates/delete/<int:cert_id>/', views.delete_certificate_view, name='delete_certificate'),
+
+    # 👥 Teams
+    path('admin-falcons/teams/', views.team_list_view, name='team_list'),
+    path('admin-falcons/teams/edit/<int:pk>/', views.team_edit_view, name='team_edit'),
+    path('admin-falcons/teams/print/', views.team_print_all_view, name='team_print_all'),
+    path('admin-falcons/teams/print/<int:pk>/', views.team_print_one_view, name='team_print_one'),
+    path('admin-falcons/teams/add/', views.add_team_view, name='add_team'),
+
+    # 👥 Parents
+    path('admin-falcons/parents/add/', views.add_parent_view, name='add_parent'),
+    path('admin-falcons/parents/<int:pk>/edit/', views.edit_parent_view, name='edit_parent'),
+    path('admin-falcons/parents/<int:pk>/print/', views.print_parent_view, name='print_parent'),
+    path('admin-falcons/parents/print_all/', views.print_all_parents_view, name='print_all_parents'),
+    path('admin-falcons/parents/', views.parents_list_view, name='parents_list'),
+
+    # 👥 Players
+    path('admin-falcons/players/', views.player_list_view, name='player_list'),
+    path('admin-falcons/players/add/', views.add_player_view, name='add_player'),
+    path('admin-falcons/players/<int:pk>/edit/', views.edit_player_view, name='edit_player'),
+    path('admin-falcons/players/<int:pk>/print/', views.print_player_view, name='print_player'),
+    path('admin-falcons/players/print_all/', views.print_all_players_view, name='print_all_players'),
+    path('admin-falcons/players/<int:player_id>/form/', views.generate_player_form, name='generate_player_form')
+
+] + static(settings.STATIC_URL, document_root=os.path.join(BASE_DIR, 'static'))
+
+
+
+# forms.py, models.py, views.py working directory: C:\admin-falcons\login
+# forms.py
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 22 11:47:59 2025
+
+@author: goranklasic
+"""
+
+from django import forms
+from login.models import Coach, CoachCertificate, Team, Parents, PML, Player
+
+class CoachForm(forms.ModelForm):
+    coach_photo = forms.FileField(label='Coach Photo', required=False)
+
+    class Meta:
+        model = Coach
+        exclude = ['coaches_id']
+        fields = [
+            'coaches_name', 'coaches_address', 'coaches_dob', 'coaches_email',
+            'coach_bi_number'
+        ]
+        labels = {
+            'coaches_name': 'Full Name',
+            'coaches_address': 'Residential Address',
+            'coaches_dob': 'Date of Birth',
+            'coaches_email': 'Email Address',
+            'coach_bi_number': 'BI Number'
+        }
+        widgets = {
+            'coaches_address': forms.Textarea(attrs={'rows': 3}),
+            'coaches_dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        for field_name, value in cleaned.items():
+            if isinstance(value, str):
+                cleaned[field_name] = value.strip()
+        return cleaned
+
+
+class CertificateForm(forms.ModelForm):
+    cert_type = forms.CharField(label='Certification Type', required=False)
+    date_issued = forms.DateField(label='Date Issued', required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    valid_until = forms.DateField(label='Valid Until', required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    notes = forms.CharField(label='Notes', required=False, widget=forms.Textarea(attrs={'rows': 2}))
+    file_path = forms.FileField(label='Certificate PDF', required=False)
+
+    class Meta:
+        model = CoachCertificate
+        fields = ['cert_type', 'date_issued', 'valid_until', 'notes', 'file_path']
+        widgets = {
+            'date_issued': forms.DateInput(attrs={'type': 'date'}),
+            'valid_until': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        for field_name, value in cleaned.items():
+            if isinstance(value, str):
+                cleaned[field_name] = value.strip()
+        return cleaned
+
+
+class TeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        exclude = ['teams_id']
+        fields = ['teams_name', 'teams_description', 'teams_membership', 'coaches_id1', 'coaches_id2']
+        labels = {
+            'teams_name': 'Team Name',
+            'teams_description': 'Description',
+            'teams_membership': 'Membership (�)',
+            'coaches_id1': 'Main Coach',
+            'coaches_id2': 'Assistant Coach',
+        }
+        widgets = {
+            'teams_description': forms.Textarea(attrs={'rows': 2}),
+            'teams_membership': forms.NumberInput(attrs={'step': '0.01'}),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        for field_name, value in cleaned.items():
+            if isinstance(value, str):
+                cleaned[field_name] = value.strip()
+        return cleaned
+
+
+class ParentsForm(forms.ModelForm):
+    parents_dob = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        label="Date of Birth"
+    )
+
+    # Member dropdowns
+    parents_member_1 = forms.ModelChoiceField(
+        queryset=PML.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+        label="Member 1"
+    )
+    parents_member_1_description = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        label="Description 1"
+    )
+
+    parents_member_2 = forms.ModelChoiceField(
+        queryset=PML.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+        label="Member 2"
+    )
+    parents_member_2_description = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        label="Description 2"
+    )
+
+    parents_member_3 = forms.ModelChoiceField(
+        queryset=PML.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+        label="Member 3"
+    )
+    parents_member_3_description = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        label="Description 3"
+    )
+
+    class Meta:
+        model = Parents
+        fields = [
+            'parents_name',
+            'parents_dob',
+            'parents_email',
+            'parents_mobile_number',
+            'parents_member_1', 'parents_member_1_description',
+            'parents_member_2', 'parents_member_2_description',
+            'parents_member_3', 'parents_member_3_description'
+        ]
+        widgets = {
+            'parents_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'parents_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'parents_mobile_number': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+    def clean(self):
+        cleaned = super().clean()
+        for field_name, value in cleaned.items():
+            if isinstance(value, str):
+                cleaned[field_name] = value.strip()
+        return cleaned
+
+
+class PlayerForm(forms.ModelForm):
+    player_dob = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False
+    )
+    player_membership_amount = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'step': '0.01'}),
+        required=False
+    )
+    player_active = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False)
+    player_transfer_out = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False, initial=0)
+    player_committee_member = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False, initial=0)
+    photo_cons = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False)
+    participation_member_training = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False)
+    participation_member_play_matches = forms.ChoiceField(choices=[(1, 'YES'), (0, 'NO')], required=False)
+    player_photo = forms.FileField(required=False)
+
+    # ? TypedChoiceFields match IntegerField model fields
+    PML_CHOICES = [(p.pml_id, p.pml_name) for p in PML.objects.all()]
+    EMPTY = [(None, 'Not involved')]
+
+    player_member_1 = forms.TypedChoiceField(
+        choices=EMPTY + PML_CHOICES,
+        coerce=int,
+        required=False,
+        label="Member 1"
+    )
+    player_member_2 = forms.TypedChoiceField(
+        choices=EMPTY + PML_CHOICES,
+        coerce=int,
+        required=False,
+        label="Member 2"
+    )
+    player_member_3 = forms.TypedChoiceField(
+        choices=EMPTY + PML_CHOICES,
+        coerce=int,
+        required=False,
+        label="Member 3"
+    )
+
+    # Additional fields
+    player_bi_number = forms.IntegerField(required=False)
+    player_team = forms.CharField(required=False)
+    player_team_id = forms.IntegerField(required=False)
+    player_role = forms.CharField(required=False)
+    player_role_id = forms.IntegerField(required=False)
+    sent_membership = forms.IntegerField(required=False)
+    gender_specify = forms.CharField(required=False)
+    player_other_roles = forms.CharField(required=False)
+    participation_member_other_activities = forms.CharField(required=False)
+    photo_link = forms.CharField(required=False)
+
+    class Meta:
+        model = Player
+        exclude = ['player_id']
+        fields = '__all__'
+        widgets = {
+           'player_address': forms.Textarea(attrs={'rows': 3}),
+           'player_medical_conditions': forms.Textarea(attrs={'rows': 2}),
+           'participation_member_other_activities': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(PlayerForm, self).__init__(*args, **kwargs)
+        self.fields['gender'].required = False
+
+    def clean(self):
+        cleaned = super().clean()
+        for field_name, value in cleaned.items():
+            if isinstance(value, str):
+                cleaned[field_name] = value.strip()
+        return cleaned
+
+
+
+# models.py
+# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 22 11:47:59 2025
+
+@author: goranklasic
+"""
+
+from django.db import models
+
+class Login(models.Model):
+    login_key = models.AutoField(primary_key=True)
+    id = models.IntegerField()
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=128)
+    coaches_id = models.IntegerField()
+    coaches_name = models.CharField(max_length=100)
+    permission_id = models.SmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'login'
+
+    def __str__(self):
+        return self.coaches_name
+
+YES_NO_CHOICES = [
+    (1, 'YES'),
+    (0, 'NO'),
+]
+
+class Coach(models.Model):
+    coaches_id = models.IntegerField(primary_key=True)
+    coaches_name = models.CharField(max_length=50)
+    coaches_address = models.TextField(blank=True)
+    coaches_dob = models.DateField()
+    coaches_email = models.EmailField()
+    coach_bi_number = models.CharField(max_length=10, blank=True, null=True)
+    active_status = models.SmallIntegerField(choices=YES_NO_CHOICES, default=1)
+    photo_link = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        db_table = 'coaches'
+
+    def __str__(self):
+        return self.coaches_name
+
+class Team(models.Model):
+    teams_id = models.IntegerField(primary_key=True)
+    teams_name = models.CharField(max_length=20)
+    teams_description = models.CharField(max_length=50, blank=True, null=True)
+    teams_membership = models.DecimalField(max_digits=15, decimal_places=2)
+
+    coaches_id1 = models.ForeignKey(
+        Coach, on_delete=models.PROTECT,
+        related_name='main_teams',
+        db_column='coaches_id1'
+    )
+    coaches_id2 = models.ForeignKey(
+        Coach, on_delete=models.PROTECT,
+        related_name='assistant_teams',
+        db_column='coaches_id2'
+    )
+
+    # ? New coach name fields to sync with FK
+    coaches_name1 = models.CharField(max_length=50)
+    coaches_name2 = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'teams'
+        managed = False
+
+    def __str__(self):
+        return self.teams_name
+
+    def save(self, *args, **kwargs):
+        # Sync coach names before saving
+        if self.coaches_id1:
+            self.coaches_name1 = self.coaches_id1.coaches_name
+        if self.coaches_id2:
+            self.coaches_name2 = self.coaches_id2.coaches_name
+        super().save(*args, **kwargs)
+
+class ContactList(models.Model):
+    playername = models.CharField(max_length=100)
+    dob = models.DateField()
+    teams_name = models.CharField(max_length=100)
+    contactemail = models.EmailField()
+    phonenumber = models.CharField(max_length=20)
+    memo = models.TextField(blank=True)
+
+    class Meta:
+        db_table = 'contactlist'
+
+    def __str__(self):
+        return f"{self.playername} ({self.teams_name})"
+
+class CoachCertificate(models.Model):
+    certificate_id = models.AutoField(primary_key=True)
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, db_column='coach_id')
+    cert_type = models.CharField(max_length=100)
+    file_path = models.TextField()
+    date_issued = models.DateField()
+    valid_until = models.DateField()
+    notes = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'coach_certificates'
+        managed = False
+
+    def __str__(self):
+        return f'{self.cert_type} for {self.coach.coaches_name}'
+
+
+class PML(models.Model):
+    pml_id = models.AutoField(primary_key=True)  # ?? Auto-incrementing ID
+    pml_name = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'pml'
+
+    def __str__(self):
+        return self.pml_name
+
+class Parents(models.Model):
+    parents_id = models.IntegerField(primary_key=True)
+    parents_name = models.CharField(max_length=50)
+    parents_dob = models.DateField()
+    parents_email = models.EmailField()
+    parents_mobile_number = models.CharField(max_length=20)
+    parents_address = models.CharField(50)
+
+    parents_member_1 = models.ForeignKey(PML, on_delete=models.SET_NULL, null=True, blank=True, db_column='parents_member_1', related_name='member_1_parents')
+    parents_member_2 = models.ForeignKey(PML, on_delete=models.SET_NULL, null=True, blank=True, db_column='parents_member_2', related_name='member_2_parents')
+    parents_member_3 = models.ForeignKey(PML, on_delete=models.SET_NULL, null=True, blank=True, db_column='parents_member_3', related_name='member_3_parents')
+
+    member_1 = models.CharField(max_length=255, blank=True, null=True)
+    member_2 = models.CharField(max_length=255, blank=True, null=True)
+    member_3 = models.CharField(max_length=255, blank=True, null=True)
+
+    parents_member_1_description = models.CharField(max_length=255, blank=True, null=True)
+    parents_member_2_description = models.CharField(max_length=255, blank=True, null=True)
+    parents_member_3_description = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'parents'
+
+    def clean(self):
+        if self.parents_name:
+            self.parents_name = self.parents_name.strip()
+        if self.parents_email:
+            self.parents_email = self.parents_email.strip()
+        if self.parents_mobile_number:
+            self.parents_mobile_number = self.parents_mobile_number.strip()
+        if self.member_1:
+            self.member_1 = self.member_1.strip()
+        if self.member_2:
+            self.member_2 = self.member_2.strip()
+        if self.member_3:
+            self.member_3 = self.member_3.strip()
+        if self.parents_member_1_description:
+            self.parents_member_1_description = self.parents_member_1_description.strip()
+        if self.parents_member_2_description:
+            self.parents_member_2_description = self.parents_member_2_description.strip()
+        if self.parents_member_3_description:
+            self.parents_member_3_description = self.parents_member_3_description.strip()
+
+class Gender(models.Model):
+    gender_id = models.IntegerField(primary_key=True)
+    gender_name = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'gender'
+        managed = False
+
+    def __str__(self):
+        return self.gender_name
+
+
+class Player(models.Model):
+    player_id = models.IntegerField(primary_key=True)
+    player_name = models.CharField(max_length=50)
+    player_bi_number = models.IntegerField()
+    player_team = models.CharField(max_length=20)
+    player_team_id = models.IntegerField()
+    player_role = models.CharField(max_length=50)
+    player_role_id = models.IntegerField()
+    player_other_roles = models.CharField(max_length=50, blank=True, null=True)
+    player_address = models.CharField(max_length=100, blank=True, null=True)
+    player_dob = models.DateField(blank=True, null=True)
+    player_email = models.CharField(max_length=50)
+    player_primary_mobile_number = models.CharField(max_length=20)
+    player_contact_name1 = models.CharField(max_length=50, blank=True, null=True)
+    player_secundary_mobile_number = models.CharField(max_length=20, blank=True, null=True)
+    player_contact_name2 = models.CharField(max_length=50, blank=True, null=True)
+    #gender_id = models.IntegerField()
+    gender = models.ForeignKey(
+    Gender, on_delete=models.SET_NULL,
+    null=True, db_column='gender_id',
+    related_name='players'
+    )
+    gender_specify = models.CharField(max_length=50, blank=True, null=True)
+    player_medical_conditions = models.CharField(max_length=50, blank=True, null=True)
+    participation_member_training = models.SmallIntegerField(blank=True, null=True)
+    participation_member_play_matches = models.SmallIntegerField(blank=True, null=True)
+    participation_member_other_activities = models.CharField(max_length=50, blank=True, null=True)
+    photo_link = models.CharField(max_length=200, blank=True, null=True)
+    player_membership_amount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    player_active = models.SmallIntegerField()
+    player_transfer_out = models.SmallIntegerField(blank=True, null=True, default=0)
+    player_jersey = models.IntegerField(blank=True, null=True)
+    sent_membership = models.SmallIntegerField(default=0)
+    created = models.DateTimeField(blank=True, null=True)
+    player_committee_member = models.SmallIntegerField(blank=True, null=True, default=0)
+    player_member_1 = models.IntegerField(blank=True, null=True)
+    player_member_2 = models.IntegerField(blank=True, null=True)
+    player_member_3 = models.IntegerField(blank=True, null=True)
+    photo_cons = models.SmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'player'
+        managed = False
+
+    def __str__(self):
+        return self.player_name
+
+    def clean(self):
+        for field_name in [
+            'player_name', 'player_address', 'player_email',
+            'player_primary_mobile_number', 'player_contact_name1',
+            'player_contact_name2', 'gender_specify',
+            'player_medical_conditions', 'participation_member_other_activities'
+        ]:
+            value = getattr(self, field_name, None)
+            if isinstance(value, str):
+                setattr(self, field_name, value.strip())
+
+class ParentsLink(models.Model):
+    id = models.IntegerField(primary_key=True)
+    player_id = models.IntegerField()
+    parents_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'parents_link'
+        managed = False
+
+class SportsLink(models.Model):
+    id = models.IntegerField(primary_key=True)  # Manual ID
+    player_id = models.IntegerField()
+    sports_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'sports_link'
+        managed = False
+
+class ClubLink(models.Model):
+    id = models.IntegerField(primary_key=True)
+    player_id = models.IntegerField()
+    clubs_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'club_link'
+        managed = False
+
+class OtherSports(models.Model):
+    sports_id = models.IntegerField(primary_key=True)
+    sports_name = models.CharField(max_length=20)
+    sports_description = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'other_sports'
+        managed = False
+
+    def __str__(self):
+        return self.sports_name
+
+class OtherClubs(models.Model):
+    clubs_id = models.IntegerField(primary_key=True)
+    clubs_name = models.CharField(max_length=20)
+    clubs_description = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'other_clubs'
+        managed = False
+
+    def __str__(self):
+        return self.clubs_name
+
+class Role(models.Model):
+    role_id = models.IntegerField(primary_key=True)
+    role_name = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'role'
+        managed = False
+
+    def __str__(self):
+        return self.role_name
+
+
+class PT(models.Model):
+    payments_type_id = models.IntegerField(primary_key=True)
+    payments_type_name = models.CharField(max_length=50)
+    icon_no = models.SmallIntegerField()
+
+    class Meta:
+        db_table = 'pt'
+        managed = False
+
+    def __str__(self):
+        return self.payments_type_name
+
+
+class Payments(models.Model):
+    payments_id = models.IntegerField(primary_key=True)
+    player_id = models.IntegerField()
+    payments_date = models.DateTimeField()
+    payments_description = models.CharField(max_length=100)
+    payments_type = models.IntegerField()
+    payments_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    web = models.SmallIntegerField(blank=True, null=True)
+    discount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    archive_year = models.IntegerField(default=0)  # ? Already present
+    archive = models.SmallIntegerField(default=0)  # ? Add this line
+
+    class Meta:
+        db_table = 'payments'
+        managed = False
+
+    def __str__(self):
+        return f"Payment #{self.payments_id} - {self.payments_amount} EUR"
+
+
+
+# views.py
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 22 11:18:19 2025
+@author: goranklasic
+"""
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, FileResponse
+from django.utils import timezone
+from django.db.models import Max
+from django.template.loader import render_to_string
+from functools import wraps
+from weasyprint import HTML, CSS
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+import os
+from django.db.models import Q
+import PyPDF2
+from io import BytesIO
+from django.core.paginator import Paginator
+from django.db.models import Sum
+from login.models import Login, Coach, ContactList, Team, CoachCertificate, Parents, PML, ParentsLink, Player, SportsLink, ClubLink, OtherSports, OtherClubs, Role, Gender, Payments, PT
+from .forms import CoachForm, CertificateForm, TeamForm, ParentsForm, PlayerForm
+from login.processor import process_player_record
+
+
+#  ? Auth Wrapper
+def login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'user_id' not in request.session:
+            return redirect('login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+#  ? Login
+def login_view(request):
+    error_message = ""
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        try:
+            user = Login.objects.get(username=username, password=password)
+
+            # ✅ Permission check
+
+            if user.permission_id and user.permission_id > 0:
+                request.session['user_id'] = user.id
+                request.session['coaches_name'] = user.coaches_name
+                return redirect('dashboard')  # base.html is rendered via dashboard
+            else:
+                error_message = "Access denied. You don't have permission to log in."
+
+            request.session['user_id'] = user.id
+            request.session['coaches_name'] = user.coaches_name
+            return redirect('dashboard')
+        except Login.DoesNotExist:
+            error_message = "Invalid username or password."
+    return render(request, 'login.html', {'error_message': error_message})
+
+#  ? Logout
+def logout_view(request):
+    request.session.flush()
+    return redirect('login')
+
+#  ?  Dashboard
+@login_required
+def dashboard_view(request):
+    return render(request, 'dashboard/dashboard_home.html', {
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+# 🧑 ? ?  Coach List
+@login_required
+def coach_list_view(request):
+    query = request.GET.get('q')
+    coaches = Coach.objects.filter(coaches_name__icontains=query.strip()).order_by('coaches_name') if query else Coach.objects.all().order_by('coaches_name')
+    return render(request, 'dashboard/coach_list.html', {
+        'coaches': coaches,
+        'filter_query': query or '',
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+#  ? ? Coach Edit + Cert Upload
+@login_required
+def edit_coach_view(request, pk):
+    coach = get_object_or_404(Coach, pk=pk)
+    form = CoachForm(instance=coach)  # 👈 Add this before checking request.method
+
+    # 🧼 Trim CharFields before loading form
+    char_fields = ['coaches_name', 'coaches_address', 'coaches_email', 'coach_bi_number', 'photo_link']
+    for field in char_fields:
+        value = getattr(coach, field, None)
+        if isinstance(value, str):
+            setattr(coach, field, value.strip())
+
+    certificates = CoachCertificate.objects.filter(coach=coach).order_by('cert_type')
+    certificate_form = CertificateForm()
+
+    if request.method == 'POST' and 'cert_upload' not in request.POST:
+        original_photo = coach.photo_link
+        form = CoachForm(request.POST, request.FILES, instance=coach)
+
+        if form.is_valid():
+            updated_coach = form.save(commit=False)
+
+            # ✅ Inject active_status manually from POST
+            active_val = request.POST.get('active_status')
+            if active_val in ['0', '1']:
+                updated_coach.active_status = int(active_val)
+
+            # Clean char fields again on save
+            for field in char_fields:
+                value = getattr(updated_coach, field, None)
+                if isinstance(value, str):
+                    setattr(updated_coach, field, value.strip())
+
+            # ✅ Optional image upload
+            if 'coach_photo' in request.FILES:
+                photo_file = request.FILES['coach_photo']
+                photo_folder = os.path.join(
+                    settings.BASE_DIR, 'login', 'static', 'uploads', 'coaches', str(coach.coaches_id)
+                )
+                os.makedirs(photo_folder, exist_ok=True)
+                fs = FileSystemStorage(location=photo_folder)
+                fs.save(photo_file.name, photo_file)
+                updated_coach.photo_link = f'/static/uploads/coaches/{coach.coaches_id}/{photo_file.name}'
+            else:
+                updated_coach.photo_link = original_photo
+
+            updated_coach.save()
+            messages.success(request, "Coach details updated successfully.")
+            return redirect('coach_edit', pk=coach.pk)
+        else:
+            messages.error(request, "Could not save coach — please check for errors.")
+
+    elif request.method == 'POST' and 'cert_upload' in request.POST:
+        certificate_form = CertificateForm(request.POST, request.FILES)
+
+        if 'file_path' not in request.FILES:
+            messages.warning(request, "Please select a certificate file before uploading.")
+        elif certificate_form.is_valid():
+            new_cert = certificate_form.save(commit=False)
+            new_cert.coach = coach
+            cert_file = request.FILES['file_path']
+            cert_folder = os.path.join(
+                settings.BASE_DIR, 'login', 'static', 'uploads', 'coaches', str(coach.coaches_id)
+            )
+            os.makedirs(cert_folder, exist_ok=True)
+            fs = FileSystemStorage(location=cert_folder)
+            fs.save(cert_file.name, cert_file)
+            new_cert.file_path = f'/static/uploads/coaches/{coach.coaches_id}/{cert_file.name}'
+            new_cert.save()
+            messages.success(request, "Certificate uploaded successfully.")
+            return redirect('coach_edit', pk=coach.pk)
+        else:
+            messages.error(request, "Could not upload certificate — please check for errors.")
+
+    else:
+        form = CoachForm(instance=coach)
+
+    return render(request, 'dashboard/edit_coach.html', {
+        'form': form,
+        'coach': coach,
+        'certificates': certificates,
+        'certificate_form': certificate_form,
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+# 🖨 ? Print All Coaches PDF
+@login_required
+def print_coaches_view(request):
+    active_coaches = Coach.objects.filter(active_status=1).order_by('coaches_name')
+    paginator = Paginator(active_coaches, 5)
+    pages = [paginator.page(i) for i in paginator.page_range]
+
+    html_string = render_to_string('dashboard/coaches_pdf.html', {'pages': pages})
+    css_path = os.path.join(settings.BASE_DIR, 'static/css/print.css')
+
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[CSS(filename=css_path)]
+    )
+
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+
+# 🖨 ? Print Single Coach + Certs PDF
+@login_required
+def print_single_coach_view(request, pk):
+    coach = get_object_or_404(Coach, pk=pk)
+    certificates = CoachCertificate.objects.filter(coach=coach).order_by('cert_type')
+    html_string = render_to_string('dashboard/print_coach.html', {
+        'coach': coach,
+        'certificates': certificates
+    })
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+    profile_pdf = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+
+    merger = PyPDF2.PdfMerger()
+    merger.append(BytesIO(profile_pdf))
+
+    for cert in certificates:
+        if cert.file_path and cert.file_path.lower().endswith('.pdf'):
+            relative_path = cert.file_path.replace('/static/', '')
+            cert_path = os.path.join(settings.BASE_DIR, 'login', 'static', relative_path)
+            if os.path.exists(cert_path):
+                with open(cert_path, 'rb') as f:
+                    merger.append(f)
+
+    output_stream = BytesIO()
+    merger.write(output_stream)
+    merger.close()
+    return HttpResponse(output_stream.getvalue(), content_type='application/pdf')
+
+# 🗂 ? Contact List
+@login_required
+def contact_list_view(request):
+    contacts = ContactList.objects.all().order_by('playername')
+    return render(request, 'dashboard/contact_list.html', {
+        'contacts': contacts,
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+#  ? ? Contact Edit
+@login_required
+def contact_edit_view(request, pk):
+    contact = get_object_or_404(ContactList, pk=pk)
+    teams = Team.objects.all().order_by('teams_name')
+    if request.method == 'POST':
+        contact.playername = request.POST.get('playername')
+        contact.dob = request.POST.get('dob')
+        contact.teams_name = request.POST.get('teams_name')
+        contact.contactemail = request.POST.get('contactemail')
+        contact.phonenumber = request.POST.get('phonenumber')
+        contact.memo = request.POST.get('memo')
+        contact.save()
+        return redirect('contact_list_view')
+    return render(request, 'dashboard/contact_edit.html', {
+        'contact': contact,
+        'teams': teams,
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+# 🖨 ? Print All Contacts
+@login_required
+def contact_print_view(request):
+    contacts = ContactList.objects.all().order_by('playername')
+    html_string = render_to_string('dashboard/contact_print.html', {'contacts': contacts})
+    css_path = os.path.join(settings.BASE_DIR, 'static/css/print.css')
+    pdf_file = HTML(string=html_string).write_pdf(stylesheets=[CSS(filename=css_path)])
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+# 🖨 ? Print Single Contact
+@login_required
+def print_single_contact_view(request, pk):
+    contact = get_object_or_404(ContactList, pk=pk)
+    html_string = render_to_string('dashboard/print_single_contact.html', {'contact': contact})
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+# 🗑 ? Delete Certificate
+@login_required
+def delete_certificate_view(request, cert_id):
+    if request.method == 'POST':
+        cert = get_object_or_404(CoachCertificate, pk=cert_id)
+        coach_id = cert.coach.pk
+        if cert.file_path:
+            relative_path = cert.file_path.replace('/static/', '')
+            cert_path = os.path.join(settings.BASE_DIR, 'login', 'static', relative_path)
+            if os.path.isfile(cert_path):
+                try:
+                    os.remove(cert_path)
+                    messages.success(request, f"File deleted: {os.path.basename(cert_path)}")
+                except Exception as e:
+                    messages.warning(request, f"File couldn't be removed: {e}")
+            else:
+                messages.info(request, "File not found. Possibly already deleted.")
+        cert.delete()
+        messages.success(request, "Certificate deleted successfully.")
+        return redirect('coach_edit', pk=coach_id)
+    messages.error(request, "Invalid request method.")
+    return redirect('dashboard')
+
+# 👥 Team List
+@login_required
+def team_list_view(request):
+    query = request.GET.get('q')
+
+    if query:
+        teams = Team.objects.filter(teams_name__icontains=query.strip()).order_by('teams_name')
+    else:
+        teams = Team.objects.all().order_by('teams_name')
+    return render(request, 'dashboard/team_list.html', {
+        'teams': teams,
+        'filter_query': query or '',
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+# 🛠 ? Team Edit
+@login_required
+def team_edit_view(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    form = TeamForm(request.POST or None, instance=team)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('team_list')
+    return render(request, 'dashboard/team_edit.html', {
+        'form': form,
+        'coaches_name': request.session.get('coaches_name', 'Coach')
+    })
+
+# 🖨 ? Print All Teams
+@login_required
+def team_print_all_view(request):
+    teams = Team.objects.all().order_by('teams_name')
+    html_string = render_to_string('dashboard/team_print_all.html', {'teams': teams})
+
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+# 🖨 ? Print Single Team
+@login_required
+def team_print_one_view(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    html_string = render_to_string('dashboard/team_print_one.html', {'team': team})
+
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+
+def get_next_coach_id():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT MAX(coaches_id) FROM coaches")
+        result = cursor.fetchone()
+        return (result[0] or 0) + 1
+
+@login_required
+def add_coach_view(request):
+    if request.method == 'POST':
+        form = CoachForm(request.POST)
+        if form.is_valid():
+            coach = form.save(commit=False)
+            coach.coaches_id = get_next_coach_id()
+            coach.save()
+            return redirect('coach_list')
+    else:
+        form = CoachForm()
+    
+    return render(request, 'dashboard/add_coach.html', {
+        'form': form,
+        'messages': [],  # optional if you're using Django messages
+    })
+
+
+def get_next_team_id():
+    max_id = Team.objects.aggregate(Max('teams_id'))['teams_id__max']
+    return (max_id or 0) + 1
+
+@login_required
+def add_team_view(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.teams_id = get_next_team_id()
+            team.save()  # coach name syncing happens via Team.save()
+            return redirect('team_list')
+    else:
+        form = TeamForm()
+
+    return render(request, 'dashboard/add_team.html', {'form': form})
+
+
+@login_required
+def add_parent_view(request):
+    form = ParentsForm(request.POST or None)
+
+    if form.is_valid():
+        parent = form.save(commit=False)
+
+        # 🔢 Manually assign parents_id (since it's not auto-incrementing)
+        max_id = Parents.objects.aggregate(Max('parents_id'))['parents_id__max'] or 0
+        parent.parents_id = max_id + 1
+
+        # 🧼 Strip whitespace from member names (via related PML records)
+        parent.member_1 = parent.parents_member_1.pml_name.strip() if parent.parents_member_1 and parent.parents_member_1.pml_name else ''
+        parent.member_2 = parent.parents_member_2.pml_name.strip() if parent.parents_member_2 and parent.parents_member_2.pml_name else ''
+        parent.member_3 = parent.parents_member_3.pml_name.strip() if parent.parents_member_3 and parent.parents_member_3.pml_name else ''
+
+        # 🧽 Clean model before saving
+        parent.full_clean()
+        parent.save()
+        return redirect('parents_list')
+
+    return render(request, 'dashboard/add_parent.html', {'form': form})
+
+@login_required
+def parents_list_view(request):
+    search_query = request.GET.get('search', '')
+    
+    # Filter logic
+    parents_qs = Parents.objects.all()
+    if search_query:
+        parents_qs = parents_qs.filter(parents_name__icontains=search_query)
+
+    # ✅ Correct ordering using the actual PK field
+    parents_qs = parents_qs.order_by('parents_id')  # Not 'id'
+
+    # Pagination
+    paginator = Paginator(parents_qs, 20)
+    page_number = request.GET.get('page')
+    parents_page = paginator.get_page(page_number)
+
+    return render(request, 'dashboard/parents_list.html', {
+        'parents': parents_page,
+        'search_query': search_query
+    })
+
+
+@login_required
+def edit_parent_view(request, pk):
+    parent = get_object_or_404(Parents, pk=pk)
+
+    # Strip whitespace before loading into form
+    for field in [
+        'parents_name', 'parents_email', 'parents_mobile_number',
+        'member_1', 'member_2', 'member_3',
+        'parents_member_1_description', 'parents_member_2_description', 'parents_member_3_description'
+    ]:
+        val = getattr(parent, field, None)
+        if isinstance(val, str):
+            setattr(parent, field, val.strip())
+
+    # All available member roles
+    all_pml = PML.objects.all()
+
+    if request.method == 'POST':
+        form = ParentsForm(request.POST, instance=parent)
+        if form.is_valid():
+            updated = form.save(commit=False)
+            updated.member_1 = updated.parents_member_1.pml_name.strip() if updated.parents_member_1 else ''
+            updated.member_2 = updated.parents_member_2.pml_name.strip() if updated.parents_member_2 else ''
+            updated.member_3 = updated.parents_member_3.pml_name.strip() if updated.parents_member_3 else ''
+            updated.full_clean()
+            updated.save()
+            return redirect('parents_list')
+    else:
+        form = ParentsForm(instance=parent)
+
+    linked_players = Player.objects.filter(
+        player_id__in=ParentsLink.objects.filter(parents_id=parent.parents_id).values('player_id')
+    )
+
+    return render(request, 'dashboard/edit_parent.html', {
+        'form': form,
+        'linked_players': linked_players,
+        'all_pml': all_pml
+    })
+
+@login_required
+def print_parent_view(request, pk):
+    parent = get_object_or_404(Parents, pk=pk)
+    linked_players = Player.objects.filter(
+        player_id__in=ParentsLink.objects.filter(parents_id=parent.parents_id).values('player_id')
+    )
+
+    html_string = render_to_string('dashboard/print_parent.html', {
+        'parent': parent,
+        'linked_players': linked_players
+    })
+
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+
+    pdf_output = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+
+    return HttpResponse(pdf_output, content_type='application/pdf')
+
+@login_required
+def print_all_parents_view(request):
+    all_parents = Parents.objects.all()
+    parent_data = []
+
+    for parent in all_parents:
+        players = Player.objects.filter(
+            player_id__in=ParentsLink.objects.filter(parents_id=parent.parents_id).values('player_id')
+        )
+        parent_data.append({'parent': parent, 'players': players})
+
+    html_string = render_to_string('dashboard/print_all_parents.html', {
+        'parent_data': parent_data
+    })
+
+    # Load CSS styles
+    bootstrap_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/bootstrap.min.css'))
+    print_css = CSS(filename=os.path.join(settings.BASE_DIR, 'static/css/print.css'))
+
+    # Generate PDF
+    pdf_output = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        stylesheets=[bootstrap_css, print_css]
+    )
+
+    return HttpResponse(pdf_output, content_type='application/pdf')
+
+@login_required
+def get_next_player_id():
+    max_id = Player.objects.aggregate(Max('player_id'))['player_id__max']
+    return (max_id or 0) + 1
+
+@login_required
+def player_list_view(request):
+    name_filter = request.GET.get('name', '').strip()
+    team_filter = request.GET.get('team', '').strip()
+    show_all = request.GET.get('all') == '1'
+    players = Player.objects.all() if show_all else Player.objects.filter(player_active=1)
+
+    if name_filter:
+        players = players.filter(player_name__icontains=name_filter)
+    if team_filter:
+        players = players.filter(player_team__icontains=team_filter)
+
+    paginator = Paginator(players.order_by('player_name'), 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'dashboard/player_list.html', {
+        'players': page_obj,
+        'name_filter': name_filter,
+        'team_filter': team_filter
+    })
+
+@login_required
+def add_player_view(request):
+    all_roles = Role.objects.all()
+    all_teams = Team.objects.all()
+    all_genders = Gender.objects.all()
+
+    if request.method == 'POST':
+        form = PlayerForm(request.POST)
+        if form.is_valid():
+            new_player = form.save(commit=False)
+
+            # 🔢 Assign new player_id manually
+            max_id = Player.objects.aggregate(Max('player_id'))['player_id__max'] or 0
+            new_player.player_id = max_id + 1
+
+            # 🧠 Gender Selection
+            gender_id = request.POST.get('gender_id')
+            gender = Gender.objects.filter(pk=gender_id).first()
+            if gender:
+                new_player.gender_id = gender.gender_id
+            new_player.gender_specify = request.POST.get('gender_specify', '')
+
+            # 🧠 Team Selection
+            team_id = request.POST.get('team')
+            team = Team.objects.filter(pk=team_id).first()
+            if team:
+                new_player.player_team_id = team.teams_id
+                new_player.player_team = team.teams_name
+                if new_player.player_membership_amount in [None, 0]:
+                    new_player.player_membership_amount = team.teams_membership
+
+            # 🧠 Role Selection
+            role_id = request.POST.get('role')
+            role = Role.objects.filter(pk=role_id).first()
+            if role:
+                new_player.player_role_id = role.role_id
+                new_player.player_role = role.role_name
+
+            # 🧼 Optional CharFields
+            new_player.player_other_roles = request.POST.get('player_other_roles', '')
+            new_player.participation_member_other_activities = request.POST.get('participation_member_other_activities', '')
+
+            # 🧠 Member dropdowns: convert '' to None
+            member_1 = request.POST.get('player_member_1')
+            member_2 = request.POST.get('player_member_2')
+            member_3 = request.POST.get('player_member_3')
+            new_player.player_member_1 = int(member_1) if member_1 else None
+            new_player.player_member_2 = int(member_2) if member_2 else None
+            new_player.player_member_3 = int(member_3) if member_3 else None
+
+            # ✅ Safe defaults
+            new_player.sent_membership = 0
+            new_player.player_transfer_out = 0
+            new_player.player_committee_member = 0
+            new_player.created = timezone.now()
+
+            new_player.save()
+            messages.success(request, "New player added successfully.")
+            return redirect('player_list')
+        else:
+            messages.error(request, "Please correct the errors before submitting.")
+    else:
+        form = PlayerForm()
+
+    return render(request, 'dashboard/add_player.html', {
+        'form': form,
+        'all_roles': all_roles,
+        'all_teams': all_teams,
+        'all_genders': all_genders
+    })
+
+
+
+@login_required
+def edit_player_view(request, pk):
+    player = get_object_or_404(Player, pk=pk)
+
+    # 🔧 Strip whitespace before loading the form
+    for field in [
+        'player_name', 'player_address', 'player_email',
+        'player_primary_mobile_number', 'player_contact_name1',
+        'player_contact_name2', 'gender_specify',
+        'player_medical_conditions', 'participation_member_other_activities',
+        'player_other_roles', 'photo_link'
+    ]:
+        val = getattr(player, field, None)
+        if isinstance(val, str):
+            setattr(player, field, val.strip())
+
+    form = PlayerForm(request.POST or None, request.FILES or None, instance=player)
+    original_photo = player.photo_link
+
+    # Lookup tables
+    all_roles = Role.objects.all()
+    all_teams = Team.objects.all()
+    all_genders = Gender.objects.all()
+    all_pml = PML.objects.all()
+    all_parents = Parents.objects.all()
+    all_sports = OtherSports.objects.all()
+    all_clubs = OtherClubs.objects.all()
+
+    # Linked data
+    linked_parent_links = ParentsLink.objects.filter(player_id=player.player_id)
+    linked_sport_links = SportsLink.objects.filter(player_id=player.player_id)
+    linked_club_links = ClubLink.objects.filter(player_id=player.player_id)
+    linked_payments = Payments.objects.filter(player_id=player.player_id,archive=0).order_by('-payments_date')
+
+    # 💰 Total payments sum
+    total_amount = Payments.objects.filter(player_id=player.player_id,archive=0).aggregate(Sum('payments_amount'))['payments_amount__sum'] or 0
+
+    if request.method == 'POST' and 'save_player' in request.POST:
+        form = PlayerForm(request.POST, request.FILES, instance=player)
+        if form.is_valid():
+            updated_player = form.save(commit=False)
+
+            # 👤 Gender Info (FIX)
+            gender_id = request.POST.get('gender_id')
+            updated_player.gender = Gender.objects.filter(pk=gender_id).first() if gender_id else None
+
+            # Team Info
+            team_id = request.POST.get('team')
+            team = Team.objects.filter(pk=team_id).first()
+            if team:
+                updated_player.player_team_id = team.teams_id
+                updated_player.player_team = team.teams_name
+                if updated_player.player_membership_amount in [None, 0]:
+                    updated_player.player_membership_amount = team.teams_membership
+
+            # Role Info
+            role_id = request.POST.get('role')
+            role = Role.objects.filter(pk=role_id).first()
+            if role:
+                updated_player.player_role_id = role.role_id
+                updated_player.player_role = role.role_name
+
+            # Extra Form Fields
+            updated_player.gender_specify = request.POST.get('gender_specify', '')
+            updated_player.player_other_roles = request.POST.get('player_other_roles', '')
+            updated_player.participation_member_other_activities = request.POST.get('participation_member_other_activities', '')
+            updated_player.sent_membership = updated_player.sent_membership or 0
+
+            # Member Dropdowns
+            updated_player.player_member_1 = request.POST.get('player_member_1') or None
+            updated_player.player_member_2 = request.POST.get('player_member_2') or None
+            updated_player.player_member_3 = request.POST.get('player_member_3') or None
+
+            # Photo Upload
+            if 'player_photo' in request.FILES:
+                photo_file = request.FILES['player_photo']
+                photo_path = os.path.join(settings.BASE_DIR, 'login', 'static', 'uploads', 'players', str(player.player_id))
+                os.makedirs(photo_path, exist_ok=True)
+                fs = FileSystemStorage(location=photo_path)
+                fs.save(photo_file.name, photo_file)
+                updated_player.photo_link = f'/static/uploads/players/{player.player_id}/{photo_file.name}'
+            else:
+                updated_player.photo_link = original_photo
+
+            updated_player.save()
+            messages.success(request, "Player details updated successfully.")
+            return redirect('player_list')
+        else:
+            messages.error(request, "Player form could not be saved. Please correct the highlighted fields.")
+            print(form.errors.as_data())
+
+    elif request.method == 'POST':
+        # Linked tables (parents, clubs, sports)
+        if 'add_parent' in request.POST:
+            new_id = request.POST.get('new_parent_id')
+            if new_id:
+                max_id = ParentsLink.objects.aggregate(Max('id'))['id__max'] or 0
+                ParentsLink.objects.create(id=max_id + 1, player_id=player.player_id, parents_id=int(new_id))
+            return redirect('edit_player', pk=pk)
+
+        elif 'delete_parent' in request.POST:
+            link_id = request.POST.get('parent_link_id')
+            ParentsLink.objects.filter(id=link_id).delete()
+            return redirect('edit_player', pk=pk)
+
+        elif 'add_sport' in request.POST:
+            sport_id = request.POST.get('new_sport_id')
+            if sport_id:
+                max_id = SportsLink.objects.aggregate(Max('id'))['id__max'] or 0
+                SportsLink.objects.create(id=max_id + 1, player_id=player.player_id, sports_id=int(sport_id))
+            return redirect('edit_player', pk=pk)
+
+        elif 'delete_sport' in request.POST:
+            link_id = request.POST.get('sport_link_id')
+            SportsLink.objects.filter(id=link_id).delete()
+            return redirect('edit_player', pk=pk)
+
+        elif 'add_club' in request.POST:
+            club_id = request.POST.get('new_club_id')
+            if club_id:
+                max_id = ClubLink.objects.aggregate(Max('id'))['id__max'] or 0
+                ClubLink.objects.create(id=max_id + 1, player_id=player.player_id, clubs_id=int(club_id))
+            return redirect('edit_player', pk=pk)
+
+        elif 'delete_club' in request.POST:
+            link_id = request.POST.get('club_link_id')
+            ClubLink.objects.filter(id=link_id).delete()
+            return redirect('edit_player', pk=pk)
+
+    return render(request, 'dashboard/edit_player.html', {
+        'form': form,
+        'player': player,
+        'linked_parent_links': linked_parent_links,
+        'linked_sport_links': linked_sport_links,
+        'linked_club_links': linked_club_links,
+        'linked_payments': linked_payments,
+        'total_amount': total_amount,
+        'all_teams': all_teams,
+        'all_roles': all_roles,
+        'all_genders': all_genders,
+        'all_pml': all_pml,
+        'all_parents': all_parents,
+        'all_sports': all_sports,
+        'all_clubs': all_clubs,
+    })
+
+@login_required
+def generate_player_form(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+
+    gender_name = player.gender.gender_name.strip() if player.gender else ''
+
+    # Grab first linked parent via ParentsLink relationship
+    linked = ParentsLink.objects.filter(player_id=player.player_id).select_related(None).first()
+    parent = Parents.objects.filter(parents_id=linked.parents_id).first() if linked else None
+
+    # Prepare tuple for processor
+    player_tuple = (
+        player.player_id,
+        player.player_name,
+        player.gender.gender_name if player.gender else '',
+        player.player_address,
+        player.player_dob,
+        player.player_email,
+        None,  # previous_teams_name (unused)
+        player.player_medical_conditions,
+        player.participation_member_training,
+        player.participation_member_play_matches,
+        player.photo_cons,
+        player.player_role,
+        player.player_primary_mobile_number,
+        player.player_contact_name1,
+        player.player_secundary_mobile_number,
+        player.player_contact_name2,
+        parent.parents_name if parent else '',
+        parent.parents_address if parent else '',
+        parent.parents_dob if parent else '',
+        parent.parents_mobile_number if parent else '',
+    )
+
+    result = process_player_record(player_tuple)
+    return FileResponse(open(result['pdf_path'], 'rb'), content_type='application/pdf')
+
+
+@login_required
+def print_player_view(request, pk):
+    player = get_object_or_404(Player, pk=pk)
+    html_string = render_to_string('dashboard/print_player.html', {'player': player})
+    css_path = os.path.join(settings.BASE_DIR, 'static/css/print.css')
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(filename=css_path)])
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+@login_required
+def print_all_players_view(request):
+    name_filter = request.GET.get('name', '').strip()
+    team_filter = request.GET.get('team', '').strip()
+    players = Player.objects.filter(player_active=1)
+
+    if name_filter:
+        players = players.filter(player_name__icontains=name_filter)
+    if team_filter:
+        players = players.filter(player_team__icontains=team_filter)
+
+    html_string = render_to_string('dashboard/print_all_players.html', {'players': players})
+    css_path = os.path.join(settings.BASE_DIR, 'static/css/print.css')
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(filename=css_path)])
+    return HttpResponse(pdf_file, content_type='application/pdf')
+
+
+
+
+
+# html templates directory: C:\admin-falcons\login\templates\dashboard
+# add_coach.html
+{% extends 'dashboard/base.html' %} {% block content %} <h3>Add Coach</h3>
+{% if messages %} {% for message in messages %} <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"> {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div> {% endfor %} {% endif %}
+<form method="post"> {% csrf_token %} {{ form.non_field_errors }}
+<!-- 👤 Coach Info --> <div class="card mb-4"> <div class="card-header bg-light fw-bold">Coach Information</div> <div class="card-body"> <table class="table table-borderless"> <tr> <td>{{ form.coaches_name.label_tag }}</td><td>{{ form.coaches_name }}</td> <td>{{ form.coaches_dob.label_tag }}</td> <td> <div class="input-group"> {{ form.coaches_dob }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_coaches_dob')"> ? </button> </div> </td> </tr> <tr> <td>{{ form.coaches_address.label_tag }}</td><td>{{ form.coaches_address }}</td> <td>{{ form.garda_vetting.label_tag }}</td><td>{{ form.garda_vetting }}</td> </tr> <tr> <td>{{ form.coaches_email.label_tag }}</td><td>{{ form.coaches_email }}</td> <td>{{ form.garda_vetting_date.label_tag }}</td> <td> <div class="input-group"> {{ form.garda_vetting_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_garda_vetting_date')"> ? </button> </div> </td> </tr> <tr> <td>{{ form.coach_bi_number.label_tag }}</td><td>{{ form.coach_bi_number }}</td> <td>{{ form.first_aid.label_tag }}</td><td>{{ form.first_aid }}</td> </tr> <tr> <td></td><td></td> <td>{{ form.first_aid_date.label_tag }}</td> <td> <div class="input-group"> {{ form.first_aid_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_first_aid_date')"> ? </button> </div> </td> </tr> </table> </div> </div>
+<!-- 📋 Certification Summary --> <div class="card mb-4"> <div class="card-header bg-light fw-bold">Certification Summary</div> <div class="card-body"> <table class="table table-borderless"> <tr> <td>{{ form.safe_guarding_level_1.label_tag }}</td><td>{{ form.safe_guarding_level_1 }}</td> <td>{{ form.basketball_coaching_level_0.label_tag }}</td><td>{{ form.basketball_coaching_level_0 }}</td> </tr> <tr> <td>{{ form.safe_guarding_level_1_date.label_tag }}</td> <td> <div class="input-group"> {{ form.safe_guarding_level_1_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_1_date')"> ? </button> </div> </td> <td>{{ form.basketball_coaching_level_0_date.label_tag }}</td> <td> <div class="input-group"> {{ form.basketball_coaching_level_0_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_0_date')"> ? </button> </div> </td> </tr> <tr> <td>{{ form.safe_guarding_level_2.label_tag }}</td><td>{{ form.safe_guarding_level_2 }}</td> <td>{{ form.basketball_coaching_level_1.label_tag }}</td><td>{{ form.basketball_coaching_level_1 }}</td> </tr> <tr> <td>{{ form.safe_guarding_level_2_date.label_tag }}</td> <td> <div class="input-group"> {{ form.safe_guarding_level_2_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_2_date')"> ? </button> </div> </td> <td>{{ form.basketball_coaching_level_1_date.label_tag }}</td> <td> <div class="input-group"> {{ form.basketball_coaching_level_1_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_1_date')"> ? </button> </div> </td> </tr> <tr> <td>{{ form.safe_guarding_level_3.label_tag }}</td><td>{{ form.safe_guarding_level_3 }}</td> <td>{{ form.basketball_coaching_level_2.label_tag }}</td><td>{{ form.basketball_coaching_level_2 }}</td> </tr> <tr> <td>{{ form.safe_guarding_level_3_date.label_tag }}</td> <td> <div class="input-group"> {{ form.safe_guarding_level_3_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_safe_guarding_level_3_date')"> ? </button> </div> </td> <td>{{ form.basketball_coaching_level_2_date.label_tag }}</td> <td> <div class="input-group"> {{ form.basketball_coaching_level_2_date }} <button type="button" class="btn btn-outline-danger" onclick="clearDate('id_basketball_coaching_level_2_date')"> ? </button> </div> </td> </tr> </table> </div> </div>
+<!-- ✅ Buttons --> <div class="mt-4 mb-5 text-end"> <button type="submit" class="btn btn-success">Add Coach</button> <a href="{% url 'coach_list' %}" class="btn btn-secondary ms-2">Cancel</a> </div> </form>
+<script> function clearDate(fieldId) { const field = document.getElementById(fieldId); if (field) field.value = ""; } </script> {% endblock %}
+
+# add_parent.html
+{% extends 'dashboard/base.html' %} {% load static %}
+{% block content %} <div class="container mt-4"> <!-- Header Image & Title --> <div class="text-center"> <img src="{% static 'images/mfheader.png' %}" alt="Header" class="img-fluid mb-2"> <h2>Add Parent</h2> </div>
+<form method="POST" class="mt-4">
+    {% csrf_token %}
+    <div class="row">
+        <!-- Left Section -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_parents_name">Parent Name</label>
+                {{ form.parents_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_dob">Date of Birth</label>
+                {{ form.parents_dob }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_email">Email</label>
+                {{ form.parents_email }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_mobile_number">Phone Number</label>
+                {{ form.parents_mobile_number }}
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="col-md-6">
+            <!-- Member 1 -->
+            <div class="form-group">
+                <label for="id_parents_member_1">Member 1</label>
+                {{ form.parents_member_1 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_1_description">Description 1</label>
+                {{ form.parents_member_1_description }}
+            </div>
+
+            <!-- Member 2 -->
+            <div class="form-group">
+                <label for="id_parents_member_2">Member 2</label>
+                {{ form.parents_member_2 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_2_description">Description 2</label>
+                {{ form.parents_member_2_description }}
+            </div>
+
+            <!-- Member 3 -->
+            <div class="form-group">
+                <label for="id_parents_member_3">Member 3</label>
+                {{ form.parents_member_3 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_3_description">Description 3</label>
+                {{ form.parents_member_3_description }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 text-center">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'parents_list' %}" class="btn btn-secondary">Go Back</a>
+    </div>
+</form>
+
+<!-- Linked Players Table (Optional, if provided in context) -->
+{% if linked_players %}
+<h4 class="mt-5">Linked Players</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Player Name</th>
+            <th>Team</th>
+            <th>BI Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in linked_players %}
+        <tr>
+            <td>{{ player.player_name }}</td>
+            <td>{{ player.player_team }}</td>
+            <td>{{ player.player_bi_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+</div> {% endblock %}
+
+# add_player
+{% extends 'dashboard/base.html' %} {% block content %} <div class="container mt-4"> <h2>Add Player</h2> <form method="post"> {% csrf_token %} <div class="row"> <div class="col-md-6"> {{ form.player_name.label_tag }} {{ form.player_name }} {{ form.player_address.label_tag }} {{ form.player_address }} {{ form.gender_id.label_tag }} {{ form.gender_id }} {{ form.gender_specify.label_tag }} {{ form.gender_specify }} {{ form.player_email.label_tag }} {{ form.player_email }} {{ form.player_dob.label_tag }} {{ form.player_dob }} {{ form.player_primary_mobile_number.label_tag }} {{ form.player_primary_mobile_number }} {{ form.player_contact_name1.label_tag }} {{ form.player_contact_name1 }} {{ form.player_secundary_mobile_number.label_tag }} {{ form.player_secundary_mobile_number }} {{ form.player_contact_name2.label_tag }} {{ form.player_contact_name2 }} </div> <div class="col-md-6"> {{ form.player_active.label_tag }} {{ form.player_active }} {{ form.player_transfer_out.label_tag }} {{ form.player_transfer_out }} {{ form.player_membership_amount.label_tag }} {{ form.player_membership_amount }} {{ form.player_bi_number.label_tag }} {{ form.player_bi_number }} {{ form.player_jersey.label_tag }} {{ form.player_jersey }} {{ form.player_team.label_tag }} {{ form.player_team }} {{ form.player_role.label_tag }} {{ form.player_role }} {{ form.player_medical_conditions.label_tag }} {{ form.player_medical_conditions }} {{ form.participation_member_training.label_tag }} {{ form.participation_member_training }} {{ form.participation_member_play_matches.label_tag }} {{ form.participation_member_play_matches }} {{ form.participation_member_other_activities.label_tag }} {{ form.participation_member_other_activities }} {{ form.player_committee_member.label_tag }} {{ form.player_committee_member }} {{ form.player_member_1.label_tag }} {{ form.player_member_1 }} {{ form.player_member_2.label_tag }} {{ form.player_member_2 }} {{ form.player_member_3.label_tag }} {{ form.player_member_3 }} {{ form.photo_cons.label_tag }} {{ form.photo_cons }} <label>Membership Email Status</label> {% if form.instance.sent_membership == 1 %} <span class="badge badge-success">Email Sent</span> {% else %} <span class="badge badge-danger">Email Not Sent</span> {% endif %} </div> </div> <div class="mt-3"> <button class="btn btn-success" type="submit">Save</button> <a class="btn btn-secondary" href="{% url 'player_list' %}">Go Back</a> </div> </form> </div> {% endblock %}
+
+# add_team.html
+{% extends "dashboard/base.html" %}
+{% block content %}
+<h2>Add Team</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Add Team</button>
+</form>
+{% endblock %}
+
+# base.html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Falcons Admin</title>
+  <link rel="icon" href="{% static 'mficon.ico' %}" type="image/x-icon">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #343a40;
+      padding-top: 30px;
+      flex-shrink: 0;
+    }
+    .sidebar a, .sidebar .menu-toggle {
+      color: white;
+      padding: 12px 20px;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .sidebar a:hover, .sidebar a.active, .sidebar .menu-toggle:hover {
+      background-color: #495057;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 30px;
+      background-color: #f8f9fa;
+    }
+    .submenu a {
+      padding-left: 35px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <nav class="sidebar" aria-label="Sidebar Navigation">
+    <div class="text-white text-center mb-4">
+      <h5>Coach: {{ coaches_name }}</h5>
+      <small>Falcons Admin</small>
+    </div>
+
+    <a href="{% url 'dashboard' %}"> ?  Dashboard</a>
+
+    <!-- Coaches Section -->
+    <a class="menu-toggle" data-toggle="collapse" href="#coachesMenu" role="button" aria-expanded="false" aria-controls="coachesMenu">
+      🧑 ? ?  Coaches ▾
+    </a>
+    <div class="collapse submenu" id="coachesMenu">
+      <a href="{% url 'coach_list' %}">📘 Coaches List</a>
+      <a href="{% url 'add_coach' %}">➕ Add Coach</a>
+      <a href="#">📊 Report</a>
+    </div>
+
+    <!-- Parents Section -->
+   <a class="menu-toggle" data-toggle="collapse" href="#parentsMenu" role="button" aria-expanded="false" aria-controls="parentsMenu">
+     👨 ?👩 ?👧 Parents ▾
+   </a>
+   <div class="collapse submenu" id="parentsMenu">
+     <a href="{% url 'parents_list' %}">📘 Parents List</a>
+     <a href="{% url 'add_parent' %}">➕ Add Parent</a>
+   </div>
+
+<!-- Players Section -->
+<a class="menu-toggle" data-toggle="collapse" href="#playersMenu" role="button" aria-expanded="false" aria-controls="playersMenu">
+   ? Players ▾
+</a>
+<div class="collapse submenu" id="playersMenu">
+  <a href="{% url 'player_list' %}">📘 Active Players</a>
+  <a href="{% url 'player_list' %}?all=1">📋 All Players</a>
+  <a href="{% url 'add_player' %}">➕ Add Player</a>
+</div>
+
+
+    <!-- Teams Section -->
+    <a class="menu-toggle" data-toggle="collapse" href="#teamsMenu" role="button" aria-expanded="false" aria-controls="teamsMenu">
+      👥 Teams ▾
+    </a>
+    <div class="collapse submenu" id="teamsMenu">
+      <a href="{% url 'team_list' %}">📘 Teams List</a>
+      <a href="{% url 'add_team' %}">➕ Add Team</a>
+    </div>
+
+
+    <!-- Contacts Section -->
+    <a class="menu-toggle" data-toggle="collapse" href="#contactsMenu" role="button" aria-expanded="false" aria-controls="contactsMenu">
+      📇 Contacts ▾
+    </a>
+    <div class="collapse submenu" id="contactsMenu">
+      <a href="{% url 'contact_list_view' %}">📘 Contact List</a>
+    </div>
+
+    <a href="{% url 'logout' %}">🔒 Logout</a>
+  </nav>
+
+  <main class="content" role="main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<!-- Bootstrap JS for collapse functionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+
+# coach_list.html
+{% extends 'dashboard/base.html' %} {% block content %} <h3 class="mb-4">Coaches List</h3>
+<!--  ? Filter form --> <form method="get" class="d-flex mb-3"> <input type="text" name="q" class="form-control me-2" placeholder="Search coaches..." value="{{ filter_query }}"> <button type="submit" class="btn btn-outline-success">Search</button> </form>
+<!-- 📋 Table of coaches --> <table class="table table-bordered table-sm"> <thead class="table-dark"> <tr> <th>Name</th> <th>Address</th> <th>DOB</th> <th>Email</th> <th>BI #</th> <th>Status</th> <!-- ✅ New badge column --> <th>Actions</th> </tr> </thead> <tbody> {% for coach in coaches %} <tr class="{% cycle 'bg-white' 'bg-light' %}"> <td>{{ coach.coaches_name }}</td> <td>{{ coach.coaches_address }}</td> <td>{{ coach.coaches_dob|date:"d/m/Y" }}</td> <td>{{ coach.coaches_email }}</td> <td>{{ coach.coach_bi_number }}</td>
+        <!-- 🟢 Status Pill Badge -->
+        <td>
+            {% if coach.active_status == 1 %}
+                <span class="badge badge-pill bg-success text-white">Active</span>
+            {% else %}
+                <span class="badge badge-pill bg-danger text-white">Inactive</span>
+            {% endif %}
+        </td>
+
+        <td>
+            <a href="{% url 'coach_edit' coach.coaches_id %}" class="btn btn-sm btn-warning">Modify</a>
+            <a href="{% url 'print_single_coach_view' coach.coaches_id %}" class="btn btn-sm btn-outline-primary ms-1" target="_blank">Print</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="7" class="text-center text-muted">No coaches found.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<!-- 🖨 ? Bulk Print Button --> <div class="mt-4"> <a href="{% url 'coach_print' %}" class="btn btn-outline-primary" target="_blank">Print PDF</a> </div> {% endblock %}
+
+# coaches_pdf.html
+{% load static %} <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>All Coaches PDF</title> <style> @page { size: A4 landscape; margin: 25px; } body { margin: 0; font-family: 'Arial', sans-serif; font-size: 11pt; } table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: avoid; } th, td { padding: 6px 8px; border: 1px solid #ccc; } .page-break { page-break-after: always; } </style> </head> <body>
+{% for page in pages %} <!-- 🔰 Logo and Header --> <div style="text-align: center;"> <img src="{% static 'mfheader.png' %}" alt="Logo" style="width: 30%; max-width: 400px; height: auto; margin-top: 16px;"> <h2 style="margin-top: 10px;">🧑 ? ?  Coaches Summary Report</h2> </div>
+<table> <thead></thead> <tbody> {% for coach in page.object_list %} <tr style="background-color: {% if forloop.counter0|divisibleby:2 %}#ffffff{% else %}#f2f2f2{% endif %};"> <td rowspan="2" style="width: 120px; text-align: center;"> {% if coach.photo_link %} <img src="{{ coach.photo_link }}" alt="Coach Photo" style="max-width: 60px; height: auto;"> {% else %} No Photo {% endif %} </td> <td style="border-bottom: none;"><strong>Name:</strong> {{ coach.coaches_name }}</td> <td style="border-bottom: none;"><strong>Address:</strong> {{ coach.coaches_address }}</td> <td style="border-bottom: none;"><strong>DOB:</strong> {{ coach.coaches_dob|date:"d/m/Y" }}</td> <td style="border-bottom: none;"><strong>Email:</strong> {{ coach.coaches_email }}</td> <td style="border-bottom: none;"><strong>BI #:</strong> {{ coach.coach_bi_number }}</td> </tr> <tr style="background-color: {% if forloop.counter0|divisibleby:2 %}#ffffff{% else %}#f2f2f2{% endif %}; font-size: 9pt;"> <td colspan="5"> <strong>FA:</strong> {{ coach.first_aid|yesno:"YES,NO" }} | <strong>GV:</strong> {{ coach.garda_vetting|yesno:"YES,NO" }} | <strong>SG1:</strong> {{ coach.safe_guarding_level_1|yesno:"YES,NO" }} | <strong>SG2:</strong> {{ coach.safe_guarding_level_2|yesno:"YES,NO" }} | <strong>SG3:</strong> {{ coach.safe_guarding_level_3|yesno:"YES,NO" }} | <strong>BI-L0:</strong> {{ coach.basketball_coaching_level_0|yesno:"YES,NO" }} | <strong>BI-L1:</strong> {{ coach.basketball_coaching_level_1|yesno:"YES,NO" }} | <strong>BI-L2:</strong> {{ coach.basketball_coaching_level_2|yesno:"YES,NO" }} </td> </tr> {% endfor %} </tbody> </table>
+{% if not forloop.last %} <div class="page-break"></div> {% endif %} {% endfor %}
+</body> </html>
+
+# contact_edit.html
+{% extends 'dashboard/base.html' %} {% block content %}
+<div class="container py-4"> <h2 class="mb-4 text-center"> ? ? Edit Contact</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="row g-3">
+
+        <!-- Player Name -->
+        <div class="col-md-6">
+            <label for="playername" class="form-label">Player Name</label>
+            <input type="text" name="playername" class="form-control" id="playername"
+                   value="{{ contact.playername }}" required>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="col-md-6">
+            <label for="dob" class="form-label">Date of Birth</label>
+            <input type="date" name="dob" class="form-control" id="dob"
+                   value="{{ contact.dob|date:'Y-m-d' }}" required>
+        </div>
+
+        <!-- Team -->
+        <div class="col-md-6">
+            <label for="teams_name" class="form-label">Team</label>
+            <select name="teams_name" class="form-select" id="teams_name" required>
+                <option value="">-- Select Team --</option>
+                {% for team in teams %}
+                    {% if team.teams_name == contact.teams_name %}
+                        <option value="{{ team.teams_name }}" selected>{{ team.teams_name }}</option>
+                    {% else %}
+                        <option value="{{ team.teams_name }}">{{ team.teams_name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6">
+            <label for="contactemail" class="form-label">Email</label>
+            <input type="email" name="contactemail" class="form-control" id="contactemail"
+                   value="{{ contact.contactemail }}" required>
+        </div>
+
+        <!-- Phone -->
+        <div class="col-md-6">
+            <label for="phonenumber" class="form-label">Phone</label>
+            <input type="text" name="phonenumber" class="form-control" id="phonenumber"
+                   value="{{ contact.phonenumber }}" required>
+        </div>
+
+        <!-- Memo -->
+        <div class="col-md-12">
+            <label for="memo" class="form-label">Memo</label>
+            <textarea name="memo" class="form-control" id="memo" rows="3">{{ contact.memo }}</textarea>
+        </div>
+    </div>
+
+    <div class="mt-4 text-end">
+        <button type="submit" class="btn btn-success">💾 Save Contact</button>
+        <a href="{% url 'contact_list_view' %}" class="btn btn-secondary ms-2">↩ Back to List</a>
+    </div>
+</form>
+</div>
+{% endblock %}
+
+# contact_list.html
+{% extends 'dashboard/base.html' %} {% block content %}
+<div class="container py-4"> <h2 class="mb-4 text-center">📇 Contact List</h2>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Player</th>
+                <th>Date of Birth</th>
+                <th>Team</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Memo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr class="{% cycle 'table-light' 'table-white' %}">
+                <td>{{ contact.playername }}</td>
+                <td>{{ contact.dob|date:"d/m/Y" }}</td>
+                <td>{{ contact.teams_name }}</td>
+                <td>{{ contact.contactemail }}</td>
+                <td>{{ contact.phonenumber }}</td>
+                <td>{{ contact.memo|linebreaksbr }}</td>
+                <td class="text-nowrap">
+                    <a href="{% url 'contact_edit_view' contact.id %}" class="btn btn-sm btn-warning me-1"> ? ? Modify</a>
+                    <a href="{% url 'print_single_contact_view' contact.id %}" class="btn btn-sm btn-secondary">🖨 ? Print</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">No contacts available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-end mt-4">
+    <a href="{% url 'contact_print_view' %}" class="btn btn-primary">
+        🖨 ? Print Full Contact List
+    </a>
+</div>
+</div>
+{% endblock %}
+
+{% extends 'dashboard/base.html' %} {% block content %}
+<div class="container py-4"> <h2 class="mb-4 text-center">📇 Contact List</h2>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Player</th>
+                <th>Date of Birth</th>
+                <th>Team</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Memo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr class="{% cycle 'table-light' 'table-white' %}">
+                <td>{{ contact.playername }}</td>
+                <td>{{ contact.dob|date:"d/m/Y" }}</td>
+                <td>{{ contact.teams_name }}</td>
+                <td>{{ contact.contactemail }}</td>
+                <td>{{ contact.phonenumber }}</td>
+                <td>{{ contact.memo|linebreaksbr }}</td>
+                <td class="text-nowrap">
+                    <a href="{% url 'contact_edit_view' contact.id %}" class="btn btn-sm btn-warning me-1"> ? ? Modify</a>
+                    <a href="{% url 'print_single_contact_view' contact.id %}" class="btn btn-sm btn-secondary">🖨 ? Print</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">No contacts available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-end mt-4">
+    <a href="{% url 'contact_print_view' %}" class="btn btn-primary">
+        🖨 ? Print Full Contact List
+    </a>
+</div>
+</div>
+{% endblock %}
+
+# contact_print.html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact List PDF</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            margin: 40px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 6px;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📇 Contact List</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Date of Birth</th>
+            <th>Team</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Memo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.playername }}</td>
+            <td>{{ contact.dob|date:"d/m/Y" }}</td>
+            <td>{{ contact.teams_name }}</td>
+            <td>{{ contact.contactemail }}</td>
+            <td>{{ contact.phonenumber }}</td>
+            <td>{{ contact.memo|linebreaksbr }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-muted text-center">No contacts available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
+
+# dashboard_home.html
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<div class="text-center">
+    <h3>Welcome, {{ coaches_name }} 👋</h3>
+    <img src="{% static 'mfheader.png' %}" alt="Logo" class="img-fluid mt-4" style="max-height: 300px;">
+    <p class="mt-3 text-muted">This is your admin control panel.</p>
+</div>
+{% endblock %}
+
+# team_print_one.html
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>{{ team.teams_name }} - Print View</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style>
+    @page { margin: 15px; }
+    body {
+      margin: 0px;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .container {
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .card {
+      width: 100%;
+      max-width: 700px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 30px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.06);
+    }
+    .card-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card-header img {
+      width: 50%;
+      max-width: 600px;
+      height: auto;
+    }
+    .card-title {
+      font-size: 26px;
+      margin-top: 15px;
+    }
+    .info-block {
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 20px;
+    }
+    .info-block p {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <img src="{% static 'mfheader.png' %}" alt="Logo">
+        <h1 class="card-title">{{ team.teams_name }}</h1>
+      </div>
+
+      <div class="info-block">
+        <p><strong>Main Coach:</strong> {{ team.coaches_name1 }}</p>
+        <p><strong>Assistant Coach:</strong> {{ team.coaches_name2 }}</p>
+        <p><strong>Membership:</strong> €{{ team.teams_membership|floatformat:2 }}</p>
+        <p><strong>Description:</strong> {{ team.teams_description }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+# team_print_all.html
+{% load static %} <head> <meta charset="UTF-8"> <title>All Teams - Falcons Admin</title> <link rel="stylesheet" href="/static/css/bootstrap.min.css"> <style> @page { margin: 15px; } body { margin: 0px; font-family: 'Arial', sans-serif; } .container { padding: 20px; }
+/* Centering header content */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.header img {
+  width: 50%;
+  max-width: 600px;
+  height: auto;
+  margin-top: 20px;
+}
+.header h1 {
+  margin-top: 10px;
+  font-size: 26px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+th, td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+th {
+  background-color: #343a40;
+  color: #fff;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+</style> </head> <body> <div class="container"> <div class="header"> <img src="{% static 'mfheader.png' %}" alt="Logo"> <h1>📘 Falcons Teams Overview</h1> </div>
+<table>
+  <thead>
+    <tr>
+      <th>Team Name</th>
+      <th>Main Coach</th>
+      <th>Assistant Coach</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for team in teams %}
+    <tr>
+      <td>{{ team.teams_name }}</td>
+      <td>{{ team.coaches_name1 }}</td>
+      <td>{{ team.coaches_name2 }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" style="text-align: center;">No teams available.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div> </body>
+
+# team_list.html
+{% extends "dashboard/base.html" %} {% block content %}
+<div class="container"> <div class="d-flex justify-content-between align-items-center mb-4"> <h2>👥 Team List</h2> <form method="get" class="form-inline"> <input type="text" name="q" class="form-control mr-2" placeholder="Search teams..." value="{{ filter_query }}"> <button type="submit" class="btn btn-outline-primary">Search</button> </form> </div>
+<table class="table table-striped table-bordered table-hover"> <thead class="thead-dark"> <tr> <th scope="col">Team Name</th> <th scope="col">Main Coach</th> <th scope="col">Assistant Coach</th> <th scope="col" class="text-center">Actions</th> </tr> </thead> <tbody> {% for team in teams %} <tr> <td>{{ team.teams_name }}</td> <td>{{ team.coaches_name1 }}</td> <!-- Main Coach --> <td>{{ team.coaches_name2 }}</td> <!-- Assistant Coach --> <td class="text-center"> <a href="{% url 'team_edit' team.pk %}" class="btn btn-sm btn-info"> ? ? Edit</a> {% if team.pk %} <a href="{% url 'team_print_one' team.pk %}" target="_blank" class="btn btn-outline-secondary">🖨 ? Print</a> {% else %} <span class="text-muted">Missing ID</span> {% endif %} </td> </tr> {% empty %} <tr> <td colspan="4" class="text-center text-muted">No teams found.</td> </tr> {% endfor %} </tbody> </table>
+<div class="mt-3 text-right"> <a href="{% url 'team_print_all' %}" class="btn btn-outline-dark" target="_blank">🖨 ? Print All Teams</a> </div> </div>
+{% endblock %}
+
+# team_edit.html
+{% extends "dashboard/base.html" %}
+{% block content %}
+<h2>Edit Team</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save</button>
+</form>
+{% endblock %}
+
+# print_single_contact.html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Profile PDF</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            margin: 40px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            page-break-inside: avoid;
+            padding: 20px;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .info {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📇 Contact Profile</h2>
+
+<div class="card">
+    <div class="card-header">Player: {{ contact.playername }}</div>
+    <div class="info"><strong>Date of Birth:</strong> {{ contact.dob|date:"d/m/Y" }}</div>
+    <div class="info"><strong>Team:</strong> {{ contact.teams_name }}</div>
+    <div class="info"><strong>Email:</strong> {{ contact.contactemail }}</div>
+    <div class="info"><strong>Phone:</strong> {{ contact.phonenumber }}</div>
+    <div class="info"><strong>Memo:</strong><br>{{ contact.memo|linebreaksbr }}</div>
+</div>
+
+</body>
+</html>
+
+# print_player.html
+<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Print Player</title> <style> body { font-family: Arial, sans-serif; font-size: 12px; } h2 { text-align: center; } .section { margin-bottom: 20px; } </style> </head> <body> <h2>Player Details</h2> <div class="section"> <strong>Name:</strong> {{ player.player_name }}<br> <strong>Date of Birth:</strong> {{ player.player_dob|date:"d/m/Y" }}<br> <strong>Address:</strong> {{ player.player_address }}<br> <strong>Email:</strong> {{ player.player_email }}<br> <strong>Phone:</strong> {{ player.player_primary_mobile_number }}<br> <strong>Team:</strong> {{ player.player_team }}<br> <strong>Role:</strong> {{ player.player_role }}<br> <strong>Membership:</strong> €{{ player.player_membership_amount|floatformat:2 }}<br> <strong>Status:</strong> {% if player.player_active == 1 %}Active{% else %}Inactive{% endif %} </div> </body> </html>
+
+# print_parent.html
+{% load static %} <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>{{ parent.parents_name }} – Profile Summary</title> <style> @page { margin: 15px; } body { font-family: 'Arial', sans-serif; margin: 0px; } .container { padding: 20px; } .header img { width: 60%; /* 🔧 Adjust width here: e.g. 100%, 50%, etc. / height: auto; / 🔧 Keeps image aspect ratio / max-height: 30%; / Optional: limit vertical size */ } table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; } th, td { border: 1px solid #ccc; padding: 8px; } </style> </head> <body> <div style="text-align: center;" class="header"> <img src="{% static 'mfheader.png' %}" alt="Header Logo"> <h2 style="margin-top: 10px;">{{ parent.parents_name }} – Profile Summary</h2> </div>
+<div class="container"> <table> <tbody> <tr><th>Date of Birth</th><td>{{ parent.parents_dob }}</td></tr> <tr><th>Email</th><td>{{ parent.parents_email }}</td></tr> <tr><th>Phone Number</th><td>{{ parent.parents_mobile_number }}</td></tr> <tr><th>Member 1</th><td>{{ parent.member_1 }}</td></tr> <tr><th>Description 1</th><td>{{ parent.parents_member_1_description }}</td></tr> <tr><th>Member 2</th><td>{{ parent.member_2 }}</td></tr> <tr><th>Description 2</th><td>{{ parent.parents_member_2_description }}</td></tr> <tr><th>Member 3</th><td>{{ parent.member_3 }}</td></tr> <tr><th>Description 3</th><td>{{ parent.parents_member_3_description }}</td></tr> </tbody> </table>
+<h4 style="margin-top: 30px;">Linked Players</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Player Name</th>
+      <th>Team</th>
+      <th>BI Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in linked_players %}
+    <tr>
+      <td>{{ player.player_name }}</td>
+      <td>{{ player.player_team }}</td>
+      <td>{{ player.player_bi_number }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No linked players found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div> </body> </html>
+
+# print_coach.html
+{% load static %} <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>Coach Profile PDF</title> <style> @page { margin: 15px; } body { margin: 0px; font-family: 'Arial', sans-serif; } .container { padding: 20px; } .header img { width: 100%; height: auto; } .coach-section { display: flex; align-items: flex-start; margin-top: 20px; } .coach-photo { width: 220px; height: auto; margin-right: 20px; } .coach-info { font-size: 14px; line-height: 1.6; } .badge { display: inline-block; padding: 4px 10px; margin-top: 5px; border-radius: 20px; color: white; font-weight: bold; font-size: 12px; } .badge-success { background-color: #28a745; } .badge-danger { background-color: #dc3545; } table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; } th, td { padding: 8px; border: 1px solid #ccc; } .split-table { display: flex; gap: 20px; margin-top: 20px; } .split-table .column { flex: 1; } </style> </head> <body>
+<div style="text-align: center;"> <img src="{% static 'mfheader.png' %}" alt="Logo" style="width: 50%; max-width: 600px; height: auto;" class="mt-4"> <h2 style="margin-top: 10px;">Coach Info</h2> </div>
+<div class="container"> <div class="coach-section"> {% if coach.photo_link %} <img src="{{ coach.photo_link }}" class="coach-photo" alt="Coach Photo" style="max-width: 150px; height: auto; margin-right: 20px;"> {% endif %} <div class="coach-info"> <p><strong>Name:</strong> {{ coach.coaches_name }}</p> <p><strong>Address:</strong> {{ coach.coaches_address }}</p> <p><strong>Email:</strong> {{ coach.coaches_email }}</p> <p><strong>Date of Birth:</strong> {{ coach.coaches_dob|date:"d/m/Y" }}</p>
+  {% if coach.active_status == 1 %}
+    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+  {% elif coach.active_status == 0 %}
+    <p><strong>Status:</strong> <span class="badge badge-danger">Inactive</span></p>
+  {% endif %}
+</div>
+</div>
+<table> <tr> <th>First Aid</th> <td>{% if coach.first_aid %}Yes{% else %}No{% endif %}</td> <th>First Aid Date</th> <td>{{ coach.first_aid_date|date:"d/m/Y" }}</td> </tr> <tr> <th>Garda Vetting</th> <td>{% if coach.garda_vetting %}Yes{% else %}No{% endif %}</td> <th>Garda Vetting Date</th> <td>{{ coach.garda_vetting_date|date:"d/m/Y" }}</td> </tr> </table>
+<div class="split-table"> <div class="column"> <table> <tr><th>Safe Guarding Level 1</th><td>{% if coach.safe_guarding_level_1 %}Yes{% else %}No{% endif %}</td></tr> <tr><th>Level 1 Date</th><td>{{ coach.safe_guarding_level_1_date|date:"d/m/Y" }}</td></tr> <tr><th>Safe Guarding Level 2</th><td>{% if coach.safe_guarding_level_2 %}Yes{% else %}No{% endif %}</td></tr> <tr><th>Level 2 Date</th><td>{{ coach.safe_guarding_level_2_date|date:"d/m/Y" }}</td></tr> <tr><th>Safe Guarding Level 3</th><td>{% if coach.safe_guarding_level_3 %}Yes{% else %}No{% endif %}</td></tr> <tr><th>Level 3 Date</th><td>{{ coach.safe_guarding_level_3_date|date:"d/m/Y" }}</td></tr> </table> </div>
+<div class="column">
+  <table>
+    <tr><th>Basketball Ireland Level 0</th><td>{% if coach.basketball_coaching_level_0 %}Yes{% else %}No{% endif %}</td></tr>
+    <tr><th>Level 0 Date</th><td>{{ coach.basketball_coaching_level_0_date|date:"d/m/Y" }}</td></tr>
+    <tr><th>Basketball Ireland Level 1</th><td>{% if coach.basketball_coaching_level_1 %}Yes{% else %}No{% endif %}</td></tr>
+    <tr><th>Level 1 Date</th><td>{{ coach.basketball_coaching_level_1_date|date:"d/m/Y" }}</td></tr>
+    <tr><th>Basketball Ireland Level 2</th><td>{% if coach.basketball_coaching_level_2 %}Yes{% else %}No{% endif %}</td></tr>
+    <tr><th>Level 2 Date</th><td>{{ coach.basketball_coaching_level_2_date|date:"d/m/Y" }}</td></tr>
+  </table>
+</div>
+</div>
+{% if certificates %} <h3 style="margin-top: 40px;">Certificates</h3> <table> <thead> <tr> <th>Type</th> <th>Date Issued</th> <th>Valid Until</th> <th>Notes</th> </tr> </thead> <tbody> {% for cert in certificates %} <tr> <td>{{ cert.cert_type }}</td> <td>{{ cert.date_issued|date:"d/m/Y" }}</td> <td>{{ cert.valid_until|date:"d/m/Y" }}</td> <td>{{ cert.notes }}</td> </tr> {% endfor %} </tbody> </table> {% endif %} </div> </body> </html>
+
+# print_all_players.html
+<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>All Players</title> <style> body { font-family: Arial, sans-serif; font-size: 12px; } table { width: 100%; border-collapse: collapse; margin-top: 20px; } th, td { border: 1px solid #000; padding: 5px; text-align: left; } th { background-color: #f2f2f2; } </style> </head> <body> <h2>All Active Players</h2> <table> <thead> <tr> <th>Name</th> <th>DOB</th> <th>Address</th> <th>Email</th> <th>Phone</th> <th>Team</th> <th>Role</th> </tr> </thead> <tbody> {% for player in players %} <tr> <td>{{ player.player_name }}</td> <td>{{ player.player_dob|date:"d/m/Y" }}</td> <td>{{ player.player_address }}</td> <td>{{ player.player_email }}</td> <td>{{ player.player_primary_mobile_number }}</td> <td>{{ player.player_team }}</td> <td>{{ player.player_role }}</td> </tr> {% endfor %} </tbody> </table> </body> </html>
+
+# print_all_parents.html
+{% load static %} <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>All Parents – Directory</title> <style> @page { margin: 15px; } body { font-family: 'Arial', sans-serif; margin: 0px; } .page-break { page-break-before: always; } .container { padding: 20px; } .header img { width: 60%; /* 🔧 Adjust image width here / height: auto; max-height: 30%; / 🔧 Optional max vertical space */ margin-bottom: 10px; } table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; } th, td { border: 1px solid #ccc; padding: 8px; } h2, h4 { margin-top: 10px; margin-bottom: 10px; text-align: center; } </style> </head> <body>
+{% for item in parent_data %} <div class="container {% if not forloop.first %}page-break{% endif %}"> <div class="header" style="text-align: center;"> <img src="{% static 'mfheader.png' %}" alt="Header Logo"> <h2>{{ item.parent.parents_name }} – Profile Summary</h2> </div>
+<table>
+  <tbody>
+    <tr><th>Date of Birth</th><td>{{ item.parent.parents_dob }}</td></tr>
+    <tr><th>Email</th><td>{{ item.parent.parents_email }}</td></tr>
+    <tr><th>Phone Number</th><td>{{ item.parent.parents_mobile_number }}</td></tr>
+    <tr><th>Member 1</th><td>{{ item.parent.member_1 }}</td></tr>
+    <tr><th>Description 1</th><td>{{ item.parent.parents_member_1_description }}</td></tr>
+    <tr><th>Member 2</th><td>{{ item.parent.member_2 }}</td></tr>
+    <tr><th>Description 2</th><td>{{ item.parent.parents_member_2_description }}</td></tr>
+    <tr><th>Member 3</th><td>{{ item.parent.member_3 }}</td></tr>
+    <tr><th>Description 3</th><td>{{ item.parent.parents_member_3_description }}</td></tr>
+  </tbody>
+</table>
+
+<h4>Linked Players</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Player Name</th>
+      <th>Team</th>
+      <th>BI Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in item.players %}
+    <tr>
+      <td>{{ player.player_name }}</td>
+      <td>{{ player.player_team }}</td>
+      <td>{{ player.player_bi_number }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No linked players found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div> {% endfor %}
+</body> </html>
+
+# player_list.html
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Player List</h2>
+    <form method="get" class="form-inline mb-3">
+  <input type="text" name="name" value="{{ name_filter }}" placeholder="Filter by Name" class="form-control mr-2">
+  <input type="text" name="team" value="{{ team_filter }}" placeholder="Filter by Team" class="form-control mr-2">
+
+  {% if request.GET.all == '1' %}
+    <input type="hidden" name="all" value="1">
+  {% endif %}
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <a href="{% url 'print_all_players' %}?name={{ name_filter }}&team={{ team_filter }}{% if request.GET.all == '1' %}&all=1{% endif %}" target="_blank" class="btn btn-secondary ml-2">Print All Players</a>
+</form>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Player Name</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>BI Number</th>
+                <th>Team</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr>
+                <td>{{ player.player_name }}</td>
+                <td>{{ player.player_dob|date:"d/m/Y" }}</td>
+                <td>{{ player.player_address }}</td>
+                <td>{{ player.player_email }}</td>
+                <td>{{ player.player_primary_mobile_number }}</td>
+                <td>{{ player.player_bi_number }}</td>
+                <td>{{ player.player_team }}</td>
+                <td>
+                    {% if player.player_active == 1 %}
+                        <span class="badge rounded-pill bg-success">Active</span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'edit_player' player.player_id %}" class="btn btn-sm btn-warning">Modify</a>
+                    <a href="{% url 'print_player' player.player_id %}" target="_blank" class="btn btn-sm btn-info">Print</a>
+                    {% if player.player_id %}
+  <a href="{% url 'generate_player_form' player.player_id %}" target="_blank" class="btn btn-outline-success btn-sm">
+     <i class="bi bi-file-earmark-pdf"></i> Form
+  </a>
+{% else %}
+  <span class="text-muted">No Form</span>
+{% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No players found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            {% if players.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ players.previous_page_number }}&name={{ name_filter }}&team={{ team_filter }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ players.number }}</span></li>
+            {% if players.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ players.next_page_number }}&name={{ name_filter }}&team={{ team_filter }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+
+
+
+
+# parents_list.html
+{% extends 'dashboard/base.html' %} {% load static %}
+{% block content %} <div class="container mt-4"> <!-- Title and Search --> <h2>Parents List</h2> <form method="GET" class="form-inline mb-3"> <input type="text" name="search" class="form-control mr-2" placeholder="Search by Name" value="{{ search_query }}"> <button type="submit" class="btn btn-primary">Filter</button> <a href="{% url 'print_all_parents' %}" target="_blank" class="btn btn-success ml-2">Print All</a> </form>
+<!-- Parents Table -->
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Mobile Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for parent in parents %}
+        <tr>
+            <td>{{ parent.parents_name }}</td>
+            <td>{{ parent.parents_address }}</td>
+            <td>{{ parent.parents_email }}</td>
+            <td>{{ parent.parents_mobile_number }}</td>
+            <td>
+                <a href="{% url 'edit_parent' parent.pk %}" class="btn btn-sm btn-warning">Modify</a>
+                <a href="{% url 'print_parent' parent.pk %}" target="_blank" class="btn btn-sm btn-secondary">Print</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if parents.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ parents.previous_page_number }}&search={{ search_query }}">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in parents.paginator.page_range %}
+        <li class="page-item {% if parents.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}&search={{ search_query }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if parents.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ parents.next_page_number }}&search={{ search_query }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+</div> {% endblock %}
+
+
+# edit_player.html
+{% extends 'dashboard/base.html' %}
+{% load player_tags %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+
+  <!-- 🔷 Header -->
+  <div class="text-center mb-4">
+    <img src="{% static 'mfheader.png' %}" alt="Header" class="img-fluid" style="max-height: 120px;">
+    <h2>Edit Player</h2>
+  </div>
+
+  <!-- ✅ Feedback Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!--  ?  Validation Errors -->
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <strong>There were issues with your submission:</strong>
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!--  ? Main Form -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="save_player" value="1">
+    <div class="row">
+
+      <!--  ? Left Column with border -->
+      <div class="col-md-6">
+        <div class="border rounded shadow-sm p-3">
+          <div class="mb-3"><label>Player Name *</label>{{ form.player_name }}</div>
+          <div class="mb-3"><label>Address *</label>{{ form.player_address }}</div>
+          <div class="mb-3">
+            <label>Gender</label>
+            <select name="gender_id" id="gender_id" class="form-select form-select-sm w-auto">
+              {% for g in all_genders %}
+                <option value="{{ g.gender_id }}" {% if g.gender_id == player.gender_id %}selected{% endif %}>{{ g.gender_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3" id="gender_specify_block" {% if player.gender_id == 0 or player.gender_id == 1 or player.gender_id == 2 %}style="display:none"{% endif %}>
+            <label>Specify Gender</label>
+            {{ form.gender_specify }}
+          </div>
+          <div class="mb-3"><label>Email *</label>{{ form.player_email }}</div>
+          <div class="mb-3"><label>Date of Birth</label>{{ form.player_dob }}</div>
+          <div class="mb-3"><label>Primary Contact Number *</label>{{ form.player_primary_mobile_number }}</div>
+          <div class="mb-3"><label>Primary Contact *</label>{{ form.player_contact_name1 }}</div>
+          <div class="mb-3"><label>Secondary Contact Number</label>{{ form.player_secundary_mobile_number }}</div>
+          <div class="mb-3"><label>Secondary Contact</label>{{ form.player_contact_name2 }}</div>
+        </div>
+      </div>
+      <!-- 📋 Right Column with border -->
+      <div class="col-md-6">
+        <div class="border rounded shadow-sm p-3">
+          <div class="mb-3"><label>Active</label>{{ form.player_active }}</div>
+          <div class="mb-3"><label>Transfer Out</label>{{ form.player_transfer_out }}</div>
+          <div class="mb-3"><label>Membership (€)</label>{{ form.player_membership_amount }}</div>
+          <div class="mb-3"><label>BI Number</label>{{ form.player_bi_number }}</div>
+          <div class="mb-3"><label>Jersey #</label>{{ form.player_jersey }}</div>
+          <div class="mb-3">
+            <label>Team</label>
+            <select name="team" class="form-select form-select-sm w-auto" id="team_dropdown">
+              {% for team in all_teams %}
+                <option value="{{ team.teams_id }}" {% if team.teams_id == player.player_team_id %}selected{% endif %}>{{ team.teams_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Role</label>
+            <select name="role" class="form-select form-select-sm w-auto">
+              {% for role in all_roles %}
+                <option value="{{ role.role_id }}" {% if role.role_id == player.player_role_id %}selected{% endif %}>{{ role.role_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3"><label>Medical Conditions</label>{{ form.player_medical_conditions }}</div>
+          <div class="mb-3"><label>Player is willing to train?</label>{{ form.participation_member_training }}</div>
+          <div class="mb-3"><label>Player is willing to play Matches?</label>{{ form.participation_member_play_matches }}</div>
+          <div class="mb-3"><label>Other Activities</label>{{ form.participation_member_other_activities }}</div>
+          <div class="mb-3"><label>Committee Member</label>{{ form.player_committee_member }}</div>
+          <div class="mb-3"><label>Member 1</label>{{ form.player_member_1 }}</div>
+          <div class="mb-3"><label>Member 2</label>{{ form.player_member_2 }}</div>
+          <div class="mb-3"><label>Member 3</label>{{ form.player_member_3 }}</div>
+          <div class="mb-3"><label>Photo Consent</label>{{ form.photo_cons }}</div>
+          <div class="mb-3">
+            <label>Email Status</label>
+            {% if player.sent_membership == 1 %}
+              <span class="badge bg-success">Email Sent</span>
+            {% else %}
+              <span class="badge bg-danger">Email Not Sent</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 💾 Save Buttons -->
+    <div class="text-center mt-4 mb-4">
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="{% url 'player_list' %}" class="btn btn-secondary ms-2">Go Back</a>
+    </div>
+
+    <!-- 🖼 ? Photo Upload -->
+    <div class="mb-4">
+      <label>Upload Player Image</label><br>
+      {{ form.player_photo }}
+      {% if player.photo_link %}
+        <div class="mt-2">
+          <img src="{{ player.photo_link }}" alt="Player Photo" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- 🧠 Dynamic Gender Toggle -->
+  <script>
+    document.getElementById("gender_id").addEventListener("change", function() {
+      const block = document.getElementById("gender_specify_block");
+      const val = parseInt(this.value);
+      block.style.display = (![0, 1, 2].includes(val)) ? "block" : "none";
+    });
+  </script>
+<!-- 👨 ?👩 ?👦 Linked Parents Section -->
+<hr class="my-5">
+<div class="border rounded shadow-sm p-3">
+  <h4>Linked Parents</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Parent Name</th><th>Email</th><th>Mobile</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for link in linked_parent_links %}
+        <tr>
+          <td>{{ link.parents_id|get_parent_name }}</td>
+          <td>{{ link.parents_id|get_parent_email }}</td>
+          <td>{{ link.parents_id|get_parent_mobile }}</td>
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="delete_parent" value="1">
+              <input type="hidden" name="parent_link_id" value="{{ link.id }}">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">No parents linked.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    <input type="hidden" name="add_parent" value="1">
+    <div class="input-group">
+      <select name="new_parent_id" class="form-select form-select-sm">
+        <option value="">-- Choose Parent --</option>
+        {% for p in all_parents %}
+          <option value="{{ p.parents_id }}">{{ p.parents_name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-success ms-2">Add Parent</button>
+    </div>
+  </form>
+</div>
+
+<!-- 💳 Payments History -->
+<hr class="my-5">
+<div class="border rounded shadow-sm p-3">
+  <h4>Payment History</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Amount (€)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in linked_payments %}
+        <tr>
+          <td>{{ payment.payments_id }}</td>
+          <td>{{ payment.payments_date|date:"d/m/Y" }}</td>
+          <td>{{ payment.payments_description }}</td>
+          <td>{{ payment.payments_type|get_pt_type }}</td>
+          <td>{{ payment.payments_amount|floatformat:2 }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="text-center text-muted">No payments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- 💰 Total Paid -->
+  <div class="text-end mt-2">
+    <strong>Total Paid:</strong> €{{ total_amount|floatformat:2 }}
+  </div>
+</div>
+
+  <!--  ?  Other Sports Section -->
+<!--  ?  Other Sports Section -->
+<hr class="my-5">
+<div class="border rounded shadow-sm p-3">
+  <h4>Other Sports</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Sport Name</th><th>Description</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for link in linked_sport_links %}
+        <tr>
+          <td>{{ link.sports_id|get_sport_name }}</td>
+          <td>{{ link.sports_id|get_sport_desc }}</td>
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="delete_sport" value="1">
+              <input type="hidden" name="sport_link_id" value="{{ link.id }}">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No sports linked.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    <input type="hidden" name="add_sport" value="1">
+    <div class="input-group">
+      <select name="new_sport_id" class="form-select form-select-sm">
+        <option value="">-- Choose Sport --</option>
+        {% for s in all_sports %}
+          <option value="{{ s.sports_id }}">{{ s.sports_name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-success ms-2">Add Sport</button>
+    </div>
+  </form>
+</div>
+
+<!-- 🎽 Other Clubs Section -->
+<hr class="my-5">
+<div class="border rounded shadow-sm p-3">
+  <h4>Other Clubs</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Club Name</th><th>Description</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for link in linked_club_links %}
+        <tr>
+          <td>{{ link.clubs_id|get_club_name }}</td>
+          <td>{{ link.clubs_id|get_club_desc }}</td>
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="delete_club" value="1">
+              <input type="hidden" name="club_link_id" value="{{ link.id }}">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No clubs linked.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    <input type="hidden" name="add_club" value="1">
+    <div class="input-group">
+      <select name="new_club_id" class="form-select form-select-sm">
+        <option value="">-- Choose Club --</option>
+        {% for c in all_clubs %}
+          <option value="{{ c.clubs_id }}">{{ c.clubs_name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-success ms-2">Add Club</button>
+    </div>
+  </form>
+</div>
+  <!-- 🎽 Other Clubs Section -->
+  <!-- 👨 ?👩 ?👦 Linked Sports Section -->
+
+</div>
+{% endblock %}
+
+
+# edit_parent.html
+{% extends 'dashboard/base.html' %} {% load static %}
+{% block content %} <div class="container mt-4"> <!-- Header Image & Title --> <div class="text-center"> <img src="{% static 'images/mfheader.png' %}" alt="Header" class="img-fluid mb-2" style="width: 60%; max-height: 30%;"> <h2>Edit Parent</h2> </div>
+<!-- Error messages if form fails validation -->
+{% if form.errors %}
+<div class="alert alert-danger">
+    <strong>Please fix the errors below:</strong>
+    <ul class="mb-0">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Edit Form -->
+<form method="POST" class="mt-4">
+    {% csrf_token %}
+    <div class="row">
+        <!-- Left Section -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_parents_name">Parent Name</label>
+                {{ form.parents_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_dob">Date of Birth</label>
+                {{ form.parents_dob }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_email">Email</label>
+                {{ form.parents_email }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_mobile_number">Phone Number</label>
+                {{ form.parents_mobile_number }}
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_parents_member_1">Member 1</label>
+                {{ form.parents_member_1 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_1_description">Description 1</label>
+                {{ form.parents_member_1_description }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_2">Member 2</label>
+                {{ form.parents_member_2 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_2_description">Description 2</label>
+                {{ form.parents_member_2_description }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_3">Member 3</label>
+                {{ form.parents_member_3 }}
+            </div>
+            <div class="form-group">
+                <label for="id_parents_member_3_description">Description 3</label>
+                {{ form.parents_member_3_description }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 text-center">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'parents_list' %}" class="btn btn-secondary">Go Back</a>
+    </div>
+</form>
+
+<!-- Linked Players Table -->
+{% if linked_players %}
+<h4 class="mt-5">Linked Players</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Player Name</th>
+            <th>Team</th>
+            <th>BI Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in linked_players %}
+        <tr>
+            <td>{{ player.player_name }}</td>
+            <td>{{ player.player_team }}</td>
+            <td>{{ player.player_bi_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+</div> {% endblock %}
+
+# edit_coach.html
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h3>Edit Coach</h3>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+<!-- Coach Info -->
+<div class="card mb-4">
+  <div class="card-header bg-light fw-bold">Coach Information</div>
+  <div class="card-body">
+    <table class="table table-borderless">
+      <tr>
+        <td>{{ form.coaches_name.label_tag }}</td><td>{{ form.coaches_name }}</td>
+        <td>{{ form.coaches_dob.label_tag }}</td>
+        <td>{{ form.coaches_dob }}</td>
+      </tr>
+      <tr>
+        <td>{{ form.coaches_address.label_tag }}</td><td>{{ form.coaches_address }}</td>
+        <td>{{ form.coaches_email.label_tag }}</td><td>{{ form.coaches_email }}</td>
+      </tr>
+      <tr>
+        <td>{{ form.coach_bi_number.label_tag }}</td><td>{{ form.coach_bi_number }}</td>
+      </tr>
+      <tr>
+        <td><label for="id_active_status">Active Status</label></td>
+        <td>
+          <select name="active_status" id="id_active_status" class="form-select">
+            <option value="1" {% if coach.active_status == 1 %}selected{% endif %}>YES</option>
+            <option value="0" {% if coach.active_status == 0 %}selected{% endif %}>NO</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+  <!-- ?? Coach Photo Preview + Upload -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Photo</div>
+    <div class="card-body text-center">
+      {% if coach.photo_link %}
+        <img src="{{ coach.photo_link }}" alt="Coach Photo" class="img-thumbnail mb-3" style="max-height: 200px;">
+      {% else %}
+        <p class="text-muted">No photo uploaded yet.</p>
+      {% endif %}
+      <div class="mb-3">
+        {{ form.coach_photo.label_tag }} {{ form.coach_photo }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ? Existing Coach Certificates -->
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Coach Certifications</div>
+    <div class="card-body">
+      {% if certificates %}
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Issued</th>
+              <th>Valid Until</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cert in certificates %}
+            <tr>
+              <td>{{ cert.cert_type }}</td>
+              <td>{{ cert.date_issued|date:"Y-m-d" }}</td>
+              <td>{{ cert.valid_until|date:"Y-m-d" }}</td>
+              <td>{{ cert.notes }}</td>
+              <td>
+                {% if cert.file_path %}
+                  <a href="{{ cert.file_path }}" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                {% endif %}
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="submitDelete('{{ cert.pk }}')">Delete</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted">No certificates attached to this coach yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ? Save Coach + Cancel Buttons (inside main form) -->
+  <div class="mt-4 mb-5 text-end">
+    <button type="submit" class="btn btn-success">Save Coach</button>
+    <a href="{% url 'coach_list' %}" class="btn btn-secondary ms-2">Close</a>
+  </div>
+</form> <!-- ? closes main coach form -->
+
+<!-- ? Upload Certificate (separate form) -->
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="hidden" name="cert_upload" value="1">
+
+  <div class="card mb-4">
+    <div class="card-header bg-light fw-bold">Upload New Certificate</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">{{ certificate_form.cert_type.label_tag }}{{ certificate_form.cert_type }}</div>
+        <div class="col-md-4">{{ certificate_form.date_issued.label_tag }}{{ certificate_form.date_issued }}</div>
+        <div class="col-md-4">{{ certificate_form.valid_until.label_tag }}{{ certificate_form.valid_until }}</div>
+        <div class="col-md-12">{{ certificate_form.notes.label_tag }}{{ certificate_form.notes }}</div>
+        <div class="col-md-12">{{ certificate_form.file_path.label_tag }}{{ certificate_form.file_path }}</div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3" onclick="return validateCertificateDates()">Upload Certificate</button>
+    </div>
+  </div>
+</form>
+
+<!-- ?? Script helpers -->
+<script>
+  function clearDate(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) field.value = "";
+  }
+
+  function validateCertificateDates() {
+    const issued = document.getElementById('id_date_issued');
+    const valid = document.getElementById('id_valid_until');
+    if (!issued || !valid) return true;
+
+    const dateIssued = new Date(issued.value);
+    const validUntil = new Date(valid.value);
+
+    if (dateIssued && validUntil && dateIssued > validUntil) {
+      const alertBox = document.createElement('div');
+      alertBox.className = 'alert alert-warning alert-dismissible fade show mt-3';
+      alertBox.role = 'alert';
+      alertBox.innerHTML = `
+        <strong>Warning:</strong> "Date Issued" cannot be later than "Valid Until".
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      document.querySelector('.card-body').prepend(alertBox);
+      return false;
+    }
+    return true;
+  }
+
+  function submitDelete(certId) {
+    if (confirm("Delete this certificate permanently?")) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/admin-falcons/certificates/delete/' + certId + '/';
+
+      const csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = 'csrfmiddlewaretoken';
+      csrf.value = '{{ csrf_token }}';
+
+      form.appendChild(csrf);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+</script>
+{% endblock %}
+
+
+
+# login.html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Falcons Login</title>
+    <link rel="icon" href="{% static 'mficon.ico' %}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container" style="max-width: 450px; margin-top: 8%;">
+    <div class="card shadow-sm">
+        <div class="card-header text-center bg-dark text-white">
+            <h4>Midleton Falcons Admin Login</h4>
+        </div>
+        <div class="card-body">
+            {% if error_message %}
+                <div class="alert alert-danger text-center">{{ error_message }}</div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" class="form-control" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+        <div class="card-footer text-muted text-center">
+            &copy; Midleton Falcons Basketball Club
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
+#login/templatetags/player_tags.py
+#player_tags.py
+from django import template
+from login.models import OtherSports, OtherClubs, Parents
+
+register = template.Library()
+
+@register.filter
+def get_sport_name(sport_id):
+    sport = OtherSports.objects.filter(sports_id=sport_id).first()
+    return sport.sports_name if sport else "—"
+
+@register.filter
+def get_sport_desc(sport_id):
+    sport = OtherSports.objects.filter(sports_id=sport_id).first()
+    return sport.sports_description if sport else "—"
+
+@register.filter
+def get_club_name(club_id):
+    club = OtherClubs.objects.filter(clubs_id=club_id).first()
+    return club.clubs_name if club else "—"
+
+@register.filter
+def get_club_desc(club_id):
+    club = OtherClubs.objects.filter(clubs_id=club_id).first()
+    return club.clubs_description if club else "—"
+
+@register.filter
+def get_parent_name(parent_id):
+    parent = Parents.objects.filter(parents_id=parent_id).first()
+    return parent.parents_name if parent else "—"
+
+@register.filter
+def get_parent_email(parent_id):
+    parent = Parents.objects.filter(parents_id=parent_id).first()
+    return parent.parents_email if parent else "—"
+
+@register.filter
+def get_parent_mobile(parent_id):
+    parent = Parents.objects.filter(parents_id=parent_id).first()
+    return parent.parents_mobile_number if parent else "—"
+
+@register.filter
+def get_pt_type(pt_id):
+    from login.models import PT
+    pt = PT.objects.filter(payments_type_id=pt_id).first()
+    return pt.payments_type_name if pt else "—"
+
+
+# processor.py
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jul 22 11:18:19 2025
+@author: goranklasic
+"""
+
+import os
+import subprocess
+import time
+from datetime import datetime
+from docxtpl import DocxTemplate
+from PyPDF2 import PdfMerger
+
+# ? Helper: Format date safely
+def format_date(val):
+    try:
+        return datetime.fromisoformat(str(val)).strftime('%Y-%m-%d')
+    except Exception:
+        return str(val or '')
+
+# ? Helper: LibreOffice headless conversion
+def convert_docx_to_pdf(input_path, output_dir):
+    try:
+        subprocess.run([
+            "soffice", "--headless", "--convert-to", "pdf", input_path,
+            "--outdir", output_dir
+        ], check=True)
+    except Exception as e:
+        print(f"? LibreOffice conversion failed: {e}")
+        raise
+
+def process_player_record(player):
+    player_id, player_name, gender_id, player_address, player_dob, player_email, _, medical, train, play, consent, role, phone1, contact1, phone2, contact2, pname, paddress, pdob, pmobile = player
+
+    context = {
+        'playername': player_name,
+        'playergender': gender_id,
+        'playeraddress': player_address,
+        'playerdob': format_date(player_dob),
+        'contactemail': player_email,
+        'medicalconditions': medical,
+        'participation_training': 'YES' if train == 1 else 'NO',
+        'participation_play_matches': 'YES' if play == 1 else 'NO',
+        'photo_cons': 'YES' if consent == 1 else 'NO',
+        'player_role': role,
+        'primary_phonenumber': phone1,
+        'primary_contact': contact1,
+        'secondary_phonenumber': phone2 or '',
+        'secondary_contact': contact2 or '',
+        'parentname': pname or '',
+        'parentaddress': paddress or '',
+        'parentdob': format_date(pdob),
+        'parentphonenumber': pmobile or '',
+        'currentdate': datetime.now().strftime('%Y-%m-%d')
+    }
+
+    safe_name = '_'.join(player_name.split())
+    base_name = f"membership_template_{safe_name}_{context['currentdate']}"
+    template_dir = os.path.join('static', 'templates')
+    output_dir = os.path.join('static', 'documents')
+    os.makedirs(output_dir, exist_ok=True)
+
+    doc_paths = {
+        'docx1': os.path.join(template_dir, 'membership_template.docx'),
+        'docx2': os.path.join(template_dir, 'membership_template_extend.docx'),
+        'filled1': os.path.join(output_dir, f"{base_name}_1.docx"),
+        'filled2': os.path.join(output_dir, f"{base_name}_2.docx"),
+        'pdf1': os.path.join(output_dir, f"{base_name}_1.pdf"),
+        'pdf2': os.path.join(output_dir, f"{base_name}_2.pdf"),
+        'merged': os.path.join(output_dir, f"{base_name}.pdf")
+    }
+
+    # ? Fill templates
+    tpl1 = DocxTemplate(doc_paths['docx1'])
+    tpl1.render(context)
+    tpl1.save(doc_paths['filled1'])
+
+    tpl2 = DocxTemplate(doc_paths['docx2'])
+    tpl2.render(context)
+    tpl2.save(doc_paths['filled2'])
+
+    # ? Convert to PDF using LibreOffice
+    convert_docx_to_pdf(doc_paths['filled1'], output_dir)
+    convert_docx_to_pdf(doc_paths['filled2'], output_dir)
+
+    # ? Merge PDFs
+    merger = PdfMerger()
+    merger.append(doc_paths['pdf1'])
+    merger.append(doc_paths['pdf2'])
+    merger.write(doc_paths['merged'])
+    merger.close()
+
+    # ? Clean temp files
+    for temp in ['filled1', 'filled2', 'pdf1', 'pdf2']:
+        try:
+            time.sleep(0.2)
+            if os.path.exists(doc_paths[temp]):
+                os.remove(doc_paths[temp])
+        except Exception as e:
+            print(f"?? Cleanup failed for {temp}: {e}")
+
+    print(f"? PDF generated for {player_name} ? {doc_paths['merged']}")
+    return {
+        'player_id': player_id,
+        'pdf_path': doc_paths['merged'],
+        'contactemail': player_email,
+        'playername': player_name
+    }
